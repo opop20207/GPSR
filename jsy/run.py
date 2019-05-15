@@ -14,6 +14,3 @@ def info():
     error=None
     myage=request.form['age']
     return render_template('info.html', age=myage)
-
-if __name__ == '__main__':
-    app.run()
