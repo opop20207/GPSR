@@ -23,10 +23,13 @@ def init_db():
         with app.open_resource('schema.sql', mode='r') as f:
             db.cursor().executablescript(f.read())
         db.commit()
+        
+def query_db(query, args=(),one=False):
+    return "H"
 
 @app.route('/')
 def main():
     return render_template('home.html')
 
-if __name__ == '__main__':
+if __name__ == '__main__' :
     app.run()
