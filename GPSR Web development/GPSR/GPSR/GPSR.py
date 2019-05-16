@@ -44,19 +44,15 @@ def get_user_num(id):
 
 @app.before_request
 def before_request():
-    """Make sure we are connected to the database each request and look
-    up the current user so that we know he's there.
-    """
     g.db = connect_db()
     g.user = None
-    if 'user_id' in session:
-        g.user = query_db('select * from user where user_id = ?',
-                          [session['user_id']], one=True)
+    if 'user_num' in session:
+        g.user = query_db('select * from user where user_num = ?',
+                          [session['user_num']], one=True)
 
 
 @app.teardown_request
 def teardown_request(exception):
-    """Closes the database again at the end of the request."""
     if hasattr(g, 'db'):
         g.db.close()
 
@@ -113,6 +109,23 @@ def login():
             session['user_id']=user['user_id']
             return redirect(url_for('home'))
     return render_template('login.html', error=error)
+
+@app.route('/geonguprincesssecretroom')
+def admin():
+    return render_template('admin.html');
+    
+@app.route('/geonguprincesssecretroom/view_user')
+def admin_view_user():
+    return a;
+
+@app.route('/geonguprincesssecretroom/delete_user')
+def admin_delete_user():
+    return a;
+
+@app.route('/geonguprincesssecretroom/add_problem')
+def admin_add_problem():
+    return a;
+
 
 if __name__ == '__main__' :
     init_db()
