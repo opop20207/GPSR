@@ -9,6 +9,11 @@ def main():
 def group():
     if request.method == 'POST':
         return render_template('group.html')
+    
+@app.route('/problem', methods=['POST'])
+def group():
+    if request.method == 'POST':
+        return render_template('problem.html')
 
 @app.route('/info', methods=['POST', 'GET'])
 def info():
