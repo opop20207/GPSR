@@ -5,9 +5,10 @@ app = Flask(__name__)
 def main():
     return render_template('home.html')
 
-@app.route('/group')
+@app.route('/group', methods=['POST'])
 def group():
-    return render_template('group.html')
+    if request.method == 'POST':
+        return render_template('group.html')
 
 @app.route('/info', methods=['POST', 'GET'])
 def info():
