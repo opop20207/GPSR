@@ -1,0 +1,17 @@
+body{
+    background: black;
+    color: white
+}
+
+input[type="button"]{
+    background: white;
+    color: black
+}
+
+a{
+    text-decoration: none;
+    padding: 5px;
+    background: white;
+    color: black;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
