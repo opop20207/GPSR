@@ -12,13 +12,9 @@ def problem():
 @app.route('/info', methods=['POST', 'GET'])
 def info():
     if request.method == 'POST':
-        mynickname=request.form['nickname']
-        mypassword=request.form['password']
-        return render_template('info.html', nickname=mynickname, password=mypassword)
+        return render_template('info.html')
     else:
-        mynickname = request.args.get('nickname')
-        mypassword = request.args.get('password')
-        return render_template('info.html', nickname=mynickname, password=mypassword)
+        return render_template('info.html')
     
 if __name__ == '__main__':
     app.run()
