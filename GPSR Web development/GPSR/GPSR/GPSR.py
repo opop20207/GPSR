@@ -6,6 +6,7 @@ from datetime import datetime
 from sqlite3 import dbapi2 as sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
 
+#settings
 DEBUG=True
 DATABASE='GPSR.db'
 PER_PAGE=30
@@ -28,5 +29,16 @@ def init_db():
 def main():
     return render_template('home.html')
 
-if __name__ == '__main__':
+@app.route('/register', methods=['GET','POST'])
+def register():
+    error=None
+    if request.method == 'POST':
+        if not request.form['user_name']:
+            error='You have to enter a username'
+        elif not request.form['user_email']:
+            error='You have to enter a emali'
+        elif not request.form['user_pw_hash']:
+            error='You have to enter a password'
+
+if __name__ == '__main__' :
     app.run()

@@ -2,8 +2,7 @@ create table if not exists user (
   	user_id integer primary key autoincrement,
   	user_name string not null,
   	user_email string not null,
-  	user_pw_hash string not null,
-  	user_development bool
+  	user_pw_hash string not null
 );
 
 create table if not exists problem{
