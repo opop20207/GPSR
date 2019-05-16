@@ -24,13 +24,21 @@ def init_db():
         with app.open_resource('schema.sql', mode='r') as f:
             db.cursor().executablescript(f.read())
         db.commit()
-        
-def query_db(query, args=(),one=False):
-    return "H"
 
 @app.route('/')
 def main():
     return render_template('home.html')
+
+@app.route('/register', methods=['GET','POST'])
+def register():
+    error=None
+    if request.method == 'POST':
+        if not request.form['user_name']:
+            error='You have to enter a username'
+        elif not request.form['user_email']:
+            error='You have to enter a emali'
+        elif not request.form['user_pw_hash']:
+            error='You have to enter a password'
 
 if __name__ == '__main__' :
     app.run()
