@@ -16,7 +16,7 @@ def problem():
         return render_template('problem.html')
     
 @app.route('/board', methods=['POST'])
-def problem():
+def board():
     if request.method == 'POST':
         return render_template('board.html')
 
