@@ -14,6 +14,11 @@ def group():
 def problem():
     if request.method == 'POST':
         return render_template('problem.html')
+    
+@app.route('/board', methods=['POST'])
+def board():
+    if request.method == 'POST':
+        return render_template('board.html')
 
 @app.route('/info', methods=['POST', 'GET'])
 def info():
