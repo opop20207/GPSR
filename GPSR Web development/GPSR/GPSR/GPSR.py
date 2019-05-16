@@ -6,6 +6,7 @@ from datetime import datetime
 from sqlite3 import dbapi2 as sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
 
+#settings
 DEBUG=True
 DATABASE='GPSR.db'
 PER_PAGE=30
