@@ -11,7 +11,7 @@ def group():
         return render_template('group.html')
     
 @app.route('/problem', methods=['POST'])
-def group():
+def problem():
     if request.method == 'POST':
         return render_template('problem.html')
 
