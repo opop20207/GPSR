@@ -2,22 +2,38 @@
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 
 <body>
-    <p>
-        <img src=/static/image/gpsr.png width="100" height="100" align="left">
-        <div style='text-align:right'>
-           <a href="{{ url_for('register') }}">register</a>
-           <br>
-           <a href="{{ url_for('login') }}"> log in </a>
+    <div class=topbar>
+        <div class=user_info>
+            <h1>this is userinfo div</h1>
         </div>
-    </p>
-    <div style= "float:left;">
-        <form action = "/group" method="POST">
-           <input id="search" type="image" src="/static/image/group.png" width="400" height="400">
-      </form>
+        <div class=logo>
+            <img src=/static/image/gpsr.png width="auto" height="140px">
+        </div>
+        <div class=navigation>
+            <a href="{{ url_for('register') }}">register</a>
+            <br>
+            <a href="{{ url_for('login') }}"> log in </a>
+        </div>
+        </div>
     </div>
-    <div style= "float:left;">
-        <form action = "/problem" method="POST">
-            <input id="search" type="image" src="/static/image/problem.png" width="400" height="400">
-        </form>
+    <div class=page>
+        <div class=page_content>
+            <form action = "/group" method="POST">
+                <input src="/static/image/group.png"
+                id="search" type="image" width="100%" height="100%">
+            </form>
+        </div>
+        <div class=page_content>
+            <form action = "/problem" method="POST">
+                <input src="/static/image/problem.png"
+                id="search" type="image" width="100%" height="100%">
+            </form>
+        </div>
+        <div class=page_content>
+            <form action = "/problem" method="POST">
+                <input src="/static/image/problem.png"
+                id="search" type="image" width="100%" height="100%">
+            </form>
+        </div>
     </div>
 </body>
