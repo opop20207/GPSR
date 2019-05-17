@@ -1,0 +1,29 @@
+{% if error %}<div><strong>Error:</strong> {{ error }}</div>{% endif %}
+<h2>REGISTER</h2>
+<form action="" method=post>
+    <dd>
+        <dl>
+            <dt>ID</dt>
+            <dd>
+                <input type=text size=30 name=id>
+            </dd>
+            <dt>nickname</dt>
+            <dd>
+                <input type=text size=30 name=nickname>
+            </dd>
+            <dt>nickname</dt>
+            <dd>
+                <input type=text size=30 name=email>
+            </dd>
+            <dt>password</dt>
+            <dd>
+                <input type=password size=30 name=password>
+            </dd>
+            <dt>password<small>(repeat)</small></dt>
+            <dd>
+                <input type=password size=30 name=password2>
+            </dd>
+        </dl>
+    </dd>
+    <div><input type=submit value="REGISTER"></div>
+</form>
