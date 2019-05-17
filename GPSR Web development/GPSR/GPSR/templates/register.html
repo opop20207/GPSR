@@ -1,0 +1,17 @@
+<h2>REGISTER</h2>
+{% if error %}<div><strong>Error:</strong> {{ error }}</div>{% endif %}
+<form action="" method=post>
+    <dl>
+        <dt>ID:
+             <dd><input type=text name=id size=30>
+        <dt>nickname:
+             <dd><input type=text name=nickname size=30>
+        <dt>email:
+             <dd><input type=text name=email size=30>
+        <dt>password:
+            <dd><input type=password name=password size=30>
+        <dt>password<small>(repeat)</small>:
+            <dd><input type=password name=password2 size=30>
+    </dl>
+    <div><input type=submit value="REIGSTER"></div>
+</form>
