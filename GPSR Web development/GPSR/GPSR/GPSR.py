@@ -59,7 +59,11 @@ def teardown_request(exception):
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    uiid=None
+    uinickname=None
+    if g.user:
+        return render_template('home.html',user_info_id=g.user['user_id'], user_info_nickname=g.user['user_nickname'])
+    return render_template('home.html', user_info_id=uiid, user_info_nickname=uinickname)
 
 @app.route('/register', methods=['GET','POST'])
 def register():
@@ -106,9 +110,14 @@ def login():
             error = 'Invalid password'
         else:
             flash('log in')
-            session['user_id']=user['user_id']
+            session['user_num']=user['user_num']
             return redirect(url_for('home'))
     return render_template('login.html', error=error)
+
+@app.route('/logout')
+def logout():
+    session.pop('user_num', None)
+    return redirect(url_for('home'))
 
 @app.route('/geonguprincesssecretroom')
 def admin():
