@@ -6,20 +6,20 @@
         <div class=user_info>
             {% if user_info_id %}
                 <a href="{{url_for('logout')}}">
-                <img src=/static/image/logout.jpg width="230px" height="50px"></a>
-                <h1>{{user_info_id}} : {{user_info_nickname}}</h1>
+                <img src=/static/image/logout.jpg width="50%" height="auto"></a>
+                <h1>{{user_info_id}} | {{user_info_nickname}}</h1>
             {% else %}
                 
             {% endif %}
         </div>
         <div class=logo>
-            <img src=/static/image/logo.jpg width="auto" height="140px">
+            <img src=/static/image/logo.jpg width="auto" height="100%">
         </div>
         <div class=navigation>
             <a href="{{url_for('login')}}">
-                <img src=/static/image/login.jpg width="230px" height="50px"></a>
+                <img src=/static/image/login.jpg width="50%" height="auto"></a>
             <a href="{{url_for('register')}}">
-                <img src=/static/image/register.jpg width="230px" height="50px"></a>
+                <img src=/static/image/register.jpg width="50%" height="auto"></a>
         </div>
     </div>
     <div class=page>
