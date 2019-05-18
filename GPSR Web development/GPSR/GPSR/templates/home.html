@@ -7,37 +7,39 @@
             {% if user_info_id %}
                 <h3>{{user_info_id}}</h3>
                 <h3>{{user_info_nickname}}</h3>
-                <a href="{{ url_for('logout') }}">logout</a>
+                <a href="{{url_for('logout')}}">
+                <img src=/static/image/logout.jpg width="230px" height="50px"></a>
             {% else %}
                 
             {% endif %}
         </div>
         <div class=logo>
-            <img src=/static/image/gpsr3.png width="auto" height="140px">
+            <img src=/static/image/logo.jpg width="auto" height="140px">
         </div>
         <div class=navigation>
-            <a href="{{ url_for('register') }}">register</a>
+            <a href="{{url_for('login')}}">
+                <img src=/static/image/login.jpg width="230px" height="50px"></a>
             <br>
-            <a href="{{ url_for('login') }}">log in</a>
-        </div>
+            <a href="{{url_for('register')}}">
+                <img src=/static/image/register.jpg width="230px" height="50px"></a>
         </div>
     </div>
     <div class=page>
         <div class=page_content>
             <form action = "/group" method="POST">
-                <input src="/static/image/group.png"
+                <input src="/static/image/group.jpg"
                 id="search" type="image" width="100%" height="auto">
             </form>
         </div>
         <div class=page_content>
             <form action = "/problem" method="POST">
-                <input src="/static/image/problem.png"
+                <input src="/static/image/problem.jpg"
                 id="search" type="image" width="100%" height="auto">
             </form>
         </div>
         <div class=page_content>
             <form action = "/problem" method="POST">
-                <input src="/static/image/board2.png"
+                <input src="/static/image/talk.jpg"
                 id="search" type="image" width="100%" height="auto">
             </form>
         </div>
