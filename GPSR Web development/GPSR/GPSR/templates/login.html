@@ -1,11 +1,25 @@
-<h2>LOGIN</h2>
-{% if error %}<div><strong>Error:</strong> {{ error }}</div>{% endif %}
-<form action="" method=post>
-    <dl>
-        <dt>ID:
-             <dd><input type=text name=id size=30>
-        <dt>password:
-            <dd><input type=password name=password size=30>
-    </dl>
-    <div><input type=submit value="LOGIN"></div>
-</form>
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<body>
+    <div class="login">
+        <div class="login_box">
+            <div class="box_img">
+                <img src=/static/image/test.png width="auto" height="auto">
+            </div>
+
+            <div class="box_text">
+                <h2>LOGIN</h2>
+                {% if error %}<div><strong>Error:</strong> {{ error }}</div>{% endif %}
+                <form action="" method=post>
+                    <dl>
+                        <dt>ID:
+                            <dd><input type=text name=id size=30></dd>
+                        </dt>password:
+                            <dd><input type=password name=password size=30></dd>
+                    </dl>
+                    <div><input type=submit value="LOGIN"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
