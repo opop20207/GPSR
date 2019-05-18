@@ -119,6 +119,18 @@ def logout():
     session.pop('user_num', None)
     return redirect(url_for('home'))
 
+@app.route('/group',methods=['GET','POST'])
+def group():
+    return render_template('group.html')
+
+@app.route('/problem',methods=['GET','POST'])
+def problem():
+    return render_template('problem.html')
+    
+@app.route('/talk',methods=['GET','POST'])
+def talk():
+    return render_template('talk.html')
+
 @app.route('/geonguprincesssecretroom')
 def admin():
     return render_template('/admin/admin.html')
@@ -142,8 +154,20 @@ def admin_view_info(user_id):
     user = query_db('select * from user where user_id = ?', [user_id], True)
     return render_template('/admin/admin_view_info.html', user=user)
 
+@app.route('/geonguprincesssecretroom/view_problem')
+def admin_view_problem():
+    return render_template('/admin/admin_view_problem.html')
+
+@app.route('/geonguprincesssecretroom/add')
+def add(methods=['POST']):
+    if request.form['text']:
+        g.db.execute('''insert into problem (problem_name,problem_text,
+        problem_pub) values(?,?,?)''', (request.form['text'],int(time.time())))
+        g.db.commit()
+    return redirect(url_for('admin_add_problem'))
+
 @app.route('/geonguprincesssecretroom/add_problem')
-def admin_add_problem():
+def admin_add_problem(methods=['POST']):
     return render_template('/admin/admin_add_problem.html')
 
 
