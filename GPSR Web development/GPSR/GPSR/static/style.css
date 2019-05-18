@@ -61,14 +61,17 @@ div.login{
     text-align: center;
     color: white;
     margin-left:30%;
-    margin-top:15%;
+    margin-top:22%;
     margin-right:30%;
 }
 
-    div.login div.login_box div.box_img{
+    div.login div.box_img{
         float:left;
+        text-align: center;
     }
 
-    div.login div.login_box div.box_text{
+    div.login div.box_text{
+        margin-left:15%;
         float:left;
+        text-align: center;
     }
