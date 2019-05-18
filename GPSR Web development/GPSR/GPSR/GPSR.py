@@ -121,12 +121,12 @@ def logout():
 
 @app.route('/geonguprincesssecretroom')
 def admin():
-    return render_template('admin.html')
+    return render_template('/admin/admin.html')
     
 #view user_list
 @app.route('/geonguprincesssecretroom/view_user')
 def admin_view_user():
-    return render_template('admin_view_user.html',users=query_db('''
+    return render_template('/admin/admin_view_user.html',users=query_db('''
     select * from user limit?''', [PER_PAGE]))
 
 #user delete
@@ -134,12 +134,12 @@ def admin_view_user():
 def admin_delete_user(user_id):
     g.db.execute('delete from user where user_id = ?', [user_id])
     g.db.commit()
-    return redirect(url_for('admin_view_user',user_id=user_id))
+    return redirect(url_for('/admin/admin_view_user',user_id=user_id))
         
 #all of information of user
 @app.route('/geonguprincesssecretroom/view_all/<user>')
 def view_all(user):
-    return render_template('admin_view_all.html',user=user.split(','))
+    return render_template('/admin/admin_view_all.html',user=user.split(','))
 
 @app.route('/geonguprincesssecretroom/add_problem')
 def admin_add_problem():
