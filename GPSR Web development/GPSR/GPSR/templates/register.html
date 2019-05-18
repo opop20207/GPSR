@@ -1,29 +1,40 @@
-{% if error %}<div><strong>Error:</strong> {{ error }}</div>{% endif %}
-<h2>REGISTER</h2>
-<form action="" method=post>
-    <dd>
-        <dl>
-            <dt>ID</dt>
-            <dd>
-                <input type=text size=30 name=id>
-            </dd>
-            <dt>nickname</dt>
-            <dd>
-                <input type=text size=30 name=nickname>
-            </dd>
-            <dt>nickname</dt>
-            <dd>
-                <input type=text size=30 name=email>
-            </dd>
-            <dt>password</dt>
-            <dd>
-                <input type=password size=30 name=password>
-            </dd>
-            <dt>password<small>(repeat)</small></dt>
-            <dd>
-                <input type=password size=30 name=password2>
-            </dd>
-        </dl>
-    </dd>
-    <div><input type=submit value="REGISTER"></div>
-</form>
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<body>
+    <div class="register">
+        <div class="box_img">
+            <br>
+            <img src=/static/image/logo.jpg width="auto" height="120px">
+        </div>
+
+        <div class="box_text">
+            <h2>REGISTER</h2>
+            {% if error %}<div><strong>Error:</strong> {{ error }}</div>{% endif %}
+            <form action="" method=post>
+                <table>
+                    <tr>
+                        <td>ID</td>
+                        <td><input type=text name=id size=30></td>
+                    </tr>
+                    <tr>
+                        <td>ninkname</td>
+                        <td><input type=text name=nickname size=30></td>
+                    </tr>
+                    <tr>
+                        <td>email</td>
+                        <td><input type=text name=email size=30></td>
+                    </tr>
+                    <tr>
+                        <td>password</td>
+                        <td><input type=password name=password size=30></td>
+                    </tr>
+                    <tr>
+                        <td>password<small>(repeat)</small></td>
+                        <td><input type=password name=password2 size=30></td>
+                    </tr>
+                </table>
+                <div><input type=submit value="REGISTER"></div>
+            </form>
+        </div>
+    </div>
+</body>

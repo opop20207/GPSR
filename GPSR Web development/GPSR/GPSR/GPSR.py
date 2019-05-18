@@ -59,7 +59,11 @@ def teardown_request(exception):
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    uiid=None
+    uinickname=None
+    if g.user:
+        return render_template('home.html',user_info_id=g.user['user_id'], user_info_nickname=g.user['user_nickname'])
+    return render_template('home.html', user_info_id=uiid, user_info_nickname=uinickname)
 
 @app.route('/register', methods=['GET','POST'])
 def register():
@@ -106,18 +110,23 @@ def login():
             error = 'Invalid password'
         else:
             flash('log in')
-            session['user_id']=user['user_id']
+            session['user_num']=user['user_num']
             return redirect(url_for('home'))
     return render_template('login.html', error=error)
 
+@app.route('/logout')
+def logout():
+    session.pop('user_num', None)
+    return redirect(url_for('home'))
+
 @app.route('/geonguprincesssecretroom')
 def admin():
-    return render_template('admin.html')
+    return render_template('/admin/admin.html')
     
 #view user_list
 @app.route('/geonguprincesssecretroom/view_user')
 def admin_view_user():
-    return render_template('admin_view_user.html',users=query_db('''
+    return render_template('/admin/admin_view_user.html',users=query_db('''
     select * from user limit?''', [PER_PAGE]))
 
 #user delete
@@ -125,16 +134,17 @@ def admin_view_user():
 def admin_delete_user(user_id):
     g.db.execute('delete from user where user_id = ?', [user_id])
     g.db.commit()
-    return redirect(url_for('admin_view_user',user_id=user_id))
-        
-#all of information of user
-@app.route('/geonguprincesssecretroom/view_all/<user>')
-def view_all(user):
-    return render_template('admin_view_all.html',user=user.split(','))
+    return redirect(url_for('/admin/admin_view_user',user_id=user_id))
+
+#all of user information
+@app.route('/geonguprincesssecretroom/view_info/<user_id>')
+def admin_view_info(user_id):
+    user = query_db('select * from user where user_id = ?', [user_id], True)
+    return render_template('/admin/admin_view_info.html', user=user)
 
 @app.route('/geonguprincesssecretroom/add_problem')
 def admin_add_problem():
-    return 'hi'
+    return render_template('/admin/admin_add_problem.html')
 
 
 if __name__ == '__main__' :

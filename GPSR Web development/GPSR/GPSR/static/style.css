@@ -1,12 +1,11 @@
 body {
     background: black;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size:30px;
+    font-family: "나눔스퀘어 Light";
+    color:white;
 }
 
 a{
     color:#a1a1a1;
-    float:right;
     text-decoration: none;
 }
 
@@ -37,6 +36,7 @@ div.topbar {
     div.topbar div.navigation {
         width: 33%;
         height: 100%;
+        text-align: right;
         float: left;
         margin-right: 0.25%;
     }
@@ -55,4 +55,42 @@ div.page {
         background-color: black;
         float: left;
         margin-right: 0.25%;
+    }
+
+div.login{
+    text-align: center;
+    color: white;
+    margin-left:30%;
+    margin-top:20%;
+    margin-right:30%;
+}
+
+    div.login div.box_img{
+        float:left;
+        text-align: center;
+    }
+
+    div.login div.box_text{
+        margin-left:15%;
+        float:left;
+        text-align: center;
+    }
+
+div.register{
+    text-align: center;
+    color: white;
+    margin-left:25%;
+    margin-top:20%;
+    margin-right:10%;
+}
+
+    div.register div.box_img{
+        float:left;
+        text-align: center;
+    }
+
+    div.register div.box_text{
+        margin-left:15%;
+        float:left;
+        text-align: center;
     }
