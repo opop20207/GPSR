@@ -1,2 +1,7 @@
-<h1>Page</h1>
-<h2><strong><a href="{{ url_for('admin_view_user') }}">view user</a></strong></h2>
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<body>
+    <h1>Admin Page</h1>
+    <h2><strong><a href="{{ url_for('admin_view_user') }}">view user</a></strong></h2>
+    <h2><strong><a href="{{ url_for('admin_add_problem') }}">add problem</a></strong></h2>
+</body>

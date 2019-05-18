@@ -135,15 +135,16 @@ def admin_delete_user(user_id):
     g.db.execute('delete from user where user_id = ?', [user_id])
     g.db.commit()
     return redirect(url_for('/admin/admin_view_user',user_id=user_id))
-        
-#all of information of user
-@app.route('/geonguprincesssecretroom/view_all/<user>')
-def view_all(user):
-    return render_template('/admin/admin_view_all.html',user=user.split(','))
+
+#all of user information
+@app.route('/geonguprincesssecretroom/view_info/<user_id>')
+def admin_view_info(user_id):
+    user = query_db('select * from user where user_id = ?', [user_id], True)
+    return render_template('/admin/admin_view_info.html', user=user)
 
 @app.route('/geonguprincesssecretroom/add_problem')
 def admin_add_problem():
-    return 'hi'
+    return render_template('/admin/admin_add_problem.html')
 
 
 if __name__ == '__main__' :
