@@ -56,3 +56,19 @@ div.page {
         margin-right: 0.25%;
     }
 
+
+div.login{
+    text-align: center;
+    color: white;
+    margin-left:30%;
+    margin-top:15%;
+    margin-right:30%;
+}
+
+    div.login div.login_box div.box_img{
+        float:left;
+    }
+
+    div.login div.login_box div.box_text{
+        float:left;
+    }
