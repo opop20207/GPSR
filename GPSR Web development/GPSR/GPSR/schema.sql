@@ -10,8 +10,7 @@ create table if not exists problem (
   problem_num integer primary key autoincrement, 
   problem_name string not null,
   problem_correct integer,
-  problem_text string not null,
-  problem_pub_data integer
+  problem_text string not null
 );
 
 create table if not exists follow (

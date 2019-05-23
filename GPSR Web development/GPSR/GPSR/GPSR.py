@@ -156,19 +156,38 @@ def admin_view_info(user_id):
 
 @app.route('/geonguprincesssecretroom/view_problem')
 def admin_view_problem():
-    return render_template('/admin/admin_view_problem.html')
+    return render_template('/admin/admin_view_problem.html',problems=query_db('''
+    select * from problem limit?''', [PER_PAGE]))
 
-@app.route('/geonguprincesssecretroom/add')
-def add(methods=['POST']):
-    if request.form['text']:
-        g.db.execute('''insert into problem (problem_name,problem_text,
-        problem_pub) values(?,?,?)''', (request.form['text'],int(time.time())))
-        g.db.commit()
-    return redirect(url_for('admin_add_problem'))
+@app.route('/geonguprincesssecretroom/add',methods=['POST'])
+def add():
+    error=None
+    if request.method == 'POST':
+        if not request.form['problem_title']:
+            error="You have to enter a title"
+        elif not request.form['problem_body']:
+            error="You have to enter a body"
+        else:
+            g.db.execute('insert into problem(problem_name,problem_correct,problem_text) values(?, ?, ?)',
+                         [request.form['problem_title'], 0, request.form['problem_body']])
+            g.db.commit()
+            return redirect(url_for('admin_view_problem'))
+    return render_template('admin/admin_add_problem.html', error=error)
 
 @app.route('/geonguprincesssecretroom/add_problem')
-def admin_add_problem(methods=['POST']):
-    return render_template('/admin/admin_add_problem.html')
+def admin_add_problem():
+    return render_template('/admin/admin_add_problem.html', error=None)
+
+@app.route('/geonguprincesssecretroom/delete_problem/<problem_num>')
+def admin_delete_problem(problem_num):
+    g.db.execute('delete from problem where problem_num = ?', [problem_num])
+    g.db.commit()
+    return redirect(url_for('admin_view_problem'))
+
+@app.route('/geonguprincesssecretroom/view_info_more_problem/<problem_num>')
+def admin_view_more_problem(problem_num):
+    problem = query_db('select * from problem where problem_num = ?', [problem_num], True)
+    return render_template('/admin/admin_view_info_problem.html', problem=problem)
 
 
 if __name__ == '__main__' :
