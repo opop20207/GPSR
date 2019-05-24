@@ -1,12 +1,18 @@
 body {
     background: black;
-    font-family: "ë‚˜ëˆ”ìŠ¤í€˜ì–´ Light";
+    font-family: "?‚˜?ˆ”?Š¤??˜ì–´ Light";
     color:white;
 }
 
 a{
     color:#a1a1a1;
     text-decoration: none;
+}
+
+pre {
+    font-family: "³ª´®½ºÄù¾î Light";
+    color:white;
+    font-size: 13pt;
 }
 
 div.topbar {

@@ -21,26 +21,28 @@ app.config.from_envvar('GPSR_SETTINGS', silent=True)
 def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
 
+
 def init_db():
     with closing(connect_db()) as db:
         with app.open_resource('schema.sql', mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit()
         
-
+        
 def query_db(query, args=(), one=False):
     cur = g.db.execute(query, args)
     rv = [dict((cur.description[idx][0], value)
                for idx, value in enumerate(row)) for row in cur.fetchall()]
     return (rv[0] if rv else None) if one else rv
-
-        
+       
+       
 def get_user_num(id):
     chk = g.db.execute('select user_num from user where user_id = ?', [id]).fetchone()
     if chk is not None:
         return chk[0]
     else:
         return None
+
 
 @app.before_request
 def before_request():
@@ -64,6 +66,7 @@ def home():
     if g.user:
         return render_template('home.html',user_info_id=g.user['user_id'], user_info_nickname=g.user['user_nickname'])
     return render_template('home.html', user_info_id=uiid, user_info_nickname=uinickname)
+
 
 @app.route('/register', methods=['GET','POST'])
 def register():
@@ -114,27 +117,39 @@ def login():
             return redirect(url_for('home'))
     return render_template('login.html', error=error)
 
+
 @app.route('/logout')
 def logout():
     session.pop('user_num', None)
     return redirect(url_for('home'))
 
+
 @app.route('/group',methods=['GET','POST'])
 def group():
     return render_template('group.html')
 
+
 @app.route('/problem',methods=['GET','POST'])
 def problem():
-    return render_template('problem.html')
+    problem_list=query_db('select * from problem')
+    return render_template('problem.html', problem_list=problem_list)
     
+@app.route('/problem/<problem_num>', method=['GET', 'POST'])
+def problem():
+    problem = query_db('select * from problem where problem_num is ?', [problem_num])
+    return a;#작업중
+
+
 @app.route('/talk',methods=['GET','POST'])
 def talk():
     return render_template('talk.html')
 
+
 @app.route('/geonguprincesssecretroom')
 def admin():
     return render_template('/admin/admin.html')
-    
+
+
 #view user_list
 @app.route('/geonguprincesssecretroom/view_user')
 def admin_view_user():
@@ -187,7 +202,7 @@ def admin_delete_problem(problem_num):
 @app.route('/geonguprincesssecretroom/view_info_more_problem/<problem_num>')
 def admin_view_more_problem(problem_num):
     problem = query_db('select * from problem where problem_num = ?', [problem_num], True)
-    return render_template('/admin/admin_view_info_problem.html', problem=problem)
+    return render_template('/admin/admin_view_info_problem.html', problem=problem, problem_ret=problem["problem_text"])
 
 
 if __name__ == '__main__' :

@@ -1,7 +1,8 @@
 <!doctype html>
+<meta charset="UTF-8">
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 <body>
-    {% for key, i in problem.items() %}
-        <h3>{{key}} : {{i}}</h3>
-    {% endfor %}
+    <h2>Problem #{{problem["problem_num"]}}</h2>
+    <hr>
+    <pre>{{problem_ret}}</pre>
 </body>

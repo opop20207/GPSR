@@ -1,3 +1,17 @@
-<body bgcolor="black" text="white">
-    <h1>Problem</h1>
-</body>
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+<html>
+    <head>
+        <title>GPSR | algorithm study</title>
+    </head>
+    <body>
+        <h2>Problem list</h2>
+        <hr>
+        {% for i in problem_list %}
+            <h4>problem #{{i["problem_num"]}} |
+                <a href="url_for('problem_view', problem_num={{problem_num}})">
+                    {{i["problem_name"]}}</a></h4>
+        {% endfor %}
+    </body>
+</html>

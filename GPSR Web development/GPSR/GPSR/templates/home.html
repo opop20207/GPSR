@@ -11,7 +11,11 @@
                 {% if user_info_id %}
                     <a href="{{url_for('logout')}}">
                     <img src=/static/image/logout.jpg width="50%" height="auto"></a>
-                    <h1>{{user_info_id}} | {{user_info_nickname}}</h1>
+                    {% if user_info_id == 'admin' %}
+                    <br>
+                    <a href="{{url_for('admin')}}">Admin page</a>
+                    {% endif %}
+                    <h2>{{user_info_id}} | {{user_info_nickname}}</h2>
                 {% else %}
                     
                 {% endif %}
