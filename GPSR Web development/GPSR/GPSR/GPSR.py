@@ -134,10 +134,10 @@ def problem():
     problem_list=query_db('select * from problem')
     return render_template('problem.html', problem_list=problem_list)
     
-@app.route('/problem/<problem_num>', method=['GET', 'POST'])
-def problem():
+@app.route('/problem/<problem_num>', methods=['GET', 'POST'])
+def problem_view(problem_num):
     problem = query_db('select * from problem where problem_num is ?', [problem_num])
-    return a;#작업중
+    return "hi"
 
 
 @app.route('/talk',methods=['GET','POST'])
