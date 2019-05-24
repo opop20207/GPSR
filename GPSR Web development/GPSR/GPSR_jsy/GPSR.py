@@ -132,13 +132,17 @@ def group():
 @app.route('/problem',methods=['GET','POST'])
 def problem():
     problem_list=query_db('select * from problem')
-    return render_template('problem.html', problem_list=problem_list)
+    return render_template('/problem/problem.html', problem_list=problem_list)
     
 @app.route('/problem/<problem_num>', methods=['GET', 'POST'])
 def problem_view(problem_num):
     problem = query_db('select * from problem where problem_num is ?', [problem_num])
-    return "hi"
+    return render_template('/problem/problem_view.html', problem=problem)
 
+
+@app.route('/problem/<problem_num>/view_io')
+def problem_view_io(problem_num):
+    return "hi"
 
 @app.route('/talk',methods=['GET','POST'])
 def talk():
