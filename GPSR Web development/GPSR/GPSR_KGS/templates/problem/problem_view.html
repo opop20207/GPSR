@@ -16,7 +16,10 @@
         <h3><a href="{{url_for('problem_view_io',
             problem_num=problem_problem_num)}}">input/output ex</a></h3>
         <hr>
-        
+        <h4>input</h4>
+        <textarea name="answer_text1" cols="80" rows="40"></textarea>
+        <div><input type=submit value="submit"></div>
+        <h4>output</h4>
         {% else %}
         <h3>There is no problem</h3>
         {% endif %}

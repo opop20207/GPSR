@@ -137,8 +137,9 @@ def problem():
 @app.route('/problem/<problem_num>', methods=['GET', 'POST'])
 def problem_view(problem_num):
     problem = query_db('select * from problem where problem_num is ?', [problem_num])
+    g.db.execute('insert into answer(answer_user, answer_text, answer_correct) values(?, ?, ?, ?)',
+                [g.user['user_id'], request.form['answer_text1'], 0])
     return render_template('/problem/problem_view.html', problem=problem)
-
 
 @app.route('/problem/<problem_num>/view_io')
 def problem_view_io(problem_num):
