@@ -1,0 +1,27 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+<html>
+    <head>
+        <title>GPSR | algorithm study</title>
+    </head>
+    <body>
+        {% if problem %}
+        <h1>Problem #{{problem[0].problem_num}}</h1>
+        <hr>
+        <h2>{{problem[0].problem_name}}</h2>
+        <hr>
+        <pre>{{problem[0].problem_text}}</pre>
+        <hr>
+        <h3><a href="{{url_for('problem_view_io',
+            problem_num=problem_problem_num)}}">input/output ex</a></h3>
+        <hr>
+        <h4>input</h4>
+        <textarea name="answer_text1" cols="80" rows="40"></textarea>
+        <div><input type=submit value="submit"></div>
+        <h4>output</h4>
+        {% else %}
+        <h3>There is no problem</h3>
+        {% endif %}
+    </body>
+</html>

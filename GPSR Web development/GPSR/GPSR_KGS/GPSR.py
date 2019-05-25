@@ -132,13 +132,18 @@ def group():
 @app.route('/problem',methods=['GET','POST'])
 def problem():
     problem_list=query_db('select * from problem')
-    return render_template('problem.html', problem_list=problem_list)
+    return render_template('/problem/problem.html', problem_list=problem_list)
     
 @app.route('/problem/<problem_num>', methods=['GET', 'POST'])
 def problem_view(problem_num):
     problem = query_db('select * from problem where problem_num is ?', [problem_num])
-    return "hi"
+    g.db.execute('insert into answer(answer_user, answer_text, answer_correct) values(?, ?, ?, ?)',
+                [g.user['user_id'], request.form['answer_text1'], 0])
+    return render_template('/problem/problem_view.html', problem=problem)
 
+@app.route('/problem/<problem_num>/view_io')
+def problem_view_io(problem_num):
+    return "hi"
 
 @app.route('/talk',methods=['GET','POST'])
 def talk():
@@ -161,7 +166,7 @@ def admin_view_user():
 def admin_delete_user(user_id):
     g.db.execute('delete from user where user_id = ?', [user_id])
     g.db.commit()
-    return redirect(url_for('/admin/admin_view_user',user_id=user_id))
+    return redirect(url_for('admin_view_user'))
 
 #all of user information
 @app.route('/geonguprincesssecretroom/view_info/<user_id>')
