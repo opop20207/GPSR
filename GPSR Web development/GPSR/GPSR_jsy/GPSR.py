@@ -7,6 +7,8 @@ from contextlib import closing
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash
 from werkzeug.security import check_password_hash, generate_password_hash
+import os
+import sys
 
 #settings
 DEBUG=True
@@ -138,6 +140,18 @@ def problem():
 def problem_view(problem_num):
     problem = query_db('select * from problem where problem_num is ?', [problem_num])
     return render_template('/problem/problem_view.html', problem=problem)
+
+@app.route('/problem/compile', methods=['GET', 'POST'])
+def problem_compile():
+    g.db.execute('insert into answer(answer_who,answer_text,answer_result) values(?, ?, ?)',
+                         [g.user['user_id'],request.form['answer_text'], 0])
+    g.db.commit()
+    answer = query_db('select * from answer where answer_text is ?', [request.form['answer_text']])
+    file=open('test_file.cpp', 'w')
+    a = answer[0]
+    file.write(a['answer_text'])
+    os.system('gcc test_file.cpp -o tf')
+    return render_template('/problem/problem_result.html',answer=answer)
 
 
 @app.route('/problem/<problem_num>/view_io')
