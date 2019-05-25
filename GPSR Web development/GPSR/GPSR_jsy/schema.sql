@@ -30,3 +30,9 @@ create table if not exists answer (
   answer_text string not null,
   answer_result integer
 );
+
+create table if not exists io(
+  io_problem_num integer,
+  io_input string not null,
+  io_output string not null
+);
