@@ -1,0 +1,9 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<body>
+    <h1>Admin Page</h1>
+    <h2><strong><a href="{{ url_for('admin_view_user') }}">view user</a></strong></h2>
+    <h2><strong><a href="{{ url_for('admin_view_problem') }}">view problem</a></strong></h2>
+    <h2><strong><a href="{{ url_for('admin_view_board') }}">view board</a></strong></h2>
+    <h2><strong><a href="{{ url_for('home') }}">to main</a></strong></h2>
+</body>

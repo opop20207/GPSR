@@ -1,0 +1,14 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+<body>
+    {% if error %}<div><strong>Error:</strong> {{ error }}</div>{% endif %}
+    <div>
+       <form action="/geonguprincesssecretroom/addB" method=post>
+            <h2>Enter the board name </h2> 
+            <input type=text name=board_name size=60>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+

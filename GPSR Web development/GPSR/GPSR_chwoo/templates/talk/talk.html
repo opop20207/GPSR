@@ -1,0 +1,17 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+<html>
+    <head>
+        <title>GPSR | algorithm study</title>
+    </head>
+    <body>
+        <h2>Board list</h2>
+        <hr>
+        {% for i in board_list %}
+            <h4>
+                <a href="{{url_for('board_view', board_name=i.board_name)}}">
+                    {{i["board_name"]}}</a></h4>
+        {% endfor %}
+    </body>
+</html>

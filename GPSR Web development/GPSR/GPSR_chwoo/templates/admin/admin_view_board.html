@@ -1,0 +1,13 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<body>
+    <h1>board list</h1>
+    <h2><strong><a href="{{ url_for('admin_add_board') }}">add board</a></strong></h2>
+    <h2><strong><a href="{{ url_for('admin') }}">to admin</a></strong></h2>
+    <hr>
+    {% for board in boards %}
+        {{ board.board_name }}
+        <strong><a href="{{ url_for('admin_delete_board', board_num=board.board_num) }}">delete</a></strong>
+        <br>
+    {% endfor %}
+</body>
