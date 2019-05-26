@@ -6,15 +6,21 @@
         <title>GPSR | algorithm study</title>
     </head>
     <body>
-        {% if talk %}
+        <h1><strong><a href="{{ url_for('home') }}">to main</a></strong></h1>
+        {% if talk %}  
         <h1>talk #{{talk[0].board_num}}</h1>
         <hr>
-        <h2>{{talk[0].board_name}}</h2>
-        <h3>{{talk[0].board_who}}</h3>
+        <h2>Title : {{talk[0].board_name}}</h2>
+        <h3>Author : {{talk[0].board_who}}
+            {% if talk[0].board_who == who_id %} |
+            <a href="{{url_for('talk_delete',board_num=talk[0].board_num)}}">delete</a>
+            {% endif %}
+        </h3>
         <hr>
+        <h2>Text</h2>
         <pre>{{talk[0].board_text}}</pre>
         {% else %}
-
+        <h3>There is no problem</h3>
         {% endif %}
     </body>
 </html>

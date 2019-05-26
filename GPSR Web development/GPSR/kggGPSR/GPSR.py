@@ -179,7 +179,7 @@ def talk():
 @app.route('/talk/<board_num>', methods=['GET','POST'])
 def talk_view(board_num):
     talk = query_db('select * from board where board_num is ?', [board_num])
-    return render_template('/talk/talk_view.html',talk=talk)
+    return render_template('/talk/talk_view.html',talk=talk, who_id=g.user['user_id'])
 
 @app.route('/talk/write')
 def talk_write():
@@ -198,7 +198,13 @@ def talk_add():
                          [request.form['talk_title'],request.form['talk_body'],g.user['user_id']])
             g.db.commit()
             return redirect(url_for('talk'))
-    return render_template('talk_write.html', error=error)
+    return render_template('/talk/talk_write.html', error=error)
+
+@app.route('/talk/delete/<board_num>',methods=['POST','GET'])
+def talk_delete(board_num):
+    g.db.execute('delete from board where board_num = ?', board_num)
+    g.db.commit()
+    return redirect(url_for('talk'))
 
 @app.route('/geonguprincesssecretroom')
 def admin():
@@ -259,6 +265,21 @@ def admin_view_more_problem(problem_num):
     problem = query_db('select * from problem where problem_num = ?', [problem_num], True)
     return render_template('/admin/admin_view_info_problem.html', problem=problem, problem_ret=problem["problem_text"])
 
+@app.route('/geonguprincesssecretroom/view_talk')
+def admin_view_talk():
+    return render_template('/admin/admin_view_talk.html',talks=query_db('''
+    select * from board limit?''', [PER_PAGE]))
+
+@app.route('/geonguprincesssecretroom/view_info_more_talk/<board_num>')
+def admin_view_more_talk(board_num):
+    board = query_db('select * from board where board_num = ?', [board_num], True)
+    return render_template('/admin/admin_view_info_talk.html',board=board)
+
+@app.route('/geonguprincesssecretroom/delete_talk/<board_num>')
+def admin_delete_talk(board_num):
+    g.db.execute('delete from board where board_num = ?', [board_num])
+    g.db.commit()
+    return redirect(url_for('admin_view_talk'))
 
 if __name__ == '__main__' :
     init_db()

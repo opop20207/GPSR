@@ -2,6 +2,7 @@
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 
 <body>
+    <h2><strong><a href="{{ url_for('admin') }}">to admin</a></strong></h2>
     {% if error %}<div><strong>Error:</strong> {{ error }}</div>{% endif %}
     <div class=problembox>
        <form action="/geonguprincesssecretroom/add" method=post>
