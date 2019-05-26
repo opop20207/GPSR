@@ -67,7 +67,7 @@ def teardown_request(exception):
 
 #######################################################################################################################################################
 #######################################################################################################################################################
-#homepage
+#home
 
 @app.route('/')
 def home():
@@ -147,6 +147,8 @@ def group():
 
 @app.route('/problem',methods=['GET','POST'])
 def problem():
+    if not g.user:
+        return redirect(url_for('home'))
     problem_list=query_db('select * from problem')
     return render_template('/problem/problem.html', problem_list=problem_list)
     
@@ -161,10 +163,12 @@ def problem_view_io(problem_num):
 
 @app.route('/problem/compile', methods=['GET', 'POST'])
 def problem_compile():
-    g.db.execute('insert into answer(answer_who,answer_text,answer_result) values(?, ?, ?)',
-                         [g.user['user_id'],request.form['answer_text'], 0])
+    g.db.execute('insert into answer(answer_problem_num,answer_who,answer_text,answer_result) values(?, ?, ?, ?)',
+                         [request.form['answer_problem_num'],g.user['user_id'],request.form['answer_text'], 0])
     g.db.commit()
-    answer = query_db('select * from answer where answer_text is ?', [request.form['answer_text']])
+    temp_answer_num = query_db('select answer_num from answer order by answer_num desc limit ?',[1])
+    print()
+    answer = query_db('select * from answer where answer_num is ?', [temp_answer_num[0]['answer_num']])
     
     file=open('test_file.c', 'w')
     a = answer[0]
@@ -173,9 +177,10 @@ def problem_compile():
 
     f = os.system('gcc test_file.c')
     if f == 0:
-        ret = os.popen('a.exe')
+        print("!!!")
+        os.system('a.exe')
         os.remove('a.exe')
-    os.remove('test_file.c')
+    #os.remove('test_file.c')
     
     return render_template('/problem/problem_result.html',answer=answer)
 

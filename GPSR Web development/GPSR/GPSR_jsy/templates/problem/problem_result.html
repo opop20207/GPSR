@@ -7,6 +7,7 @@
     </head>
     <body>
         {% if answer %}
+        <h2>{{answer[0].answer_problem_num}}</h2>
         <h2>{{answer[0].answer_num}}</h2>
         <pre>{{answer[0].answer_text}}</pre>
         <h3>{{answer[0].answer_who}}</h3>

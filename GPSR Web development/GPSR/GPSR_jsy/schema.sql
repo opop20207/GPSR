@@ -26,6 +26,7 @@ create table if not exists board (
 
 create table if not exists answer (
   answer_num integer primary key autoincrement,
+  answer_problem_num integer,
   answer_who string not null,
   answer_text string not null,
   answer_result integer
