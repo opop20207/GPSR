@@ -168,6 +168,7 @@ def problem_compile():
     
     return render_template('/problem/problem_result.html',answer=answer)
 
+
 @app.route('/talk',methods=['GET','POST'])
 def talk():
     if not g.user:
@@ -194,7 +195,7 @@ def talk_add():
             error="You have to enter a body"
         else:
             g.db.execute('insert into board (board_name, board_text, board_who) values (?, ?, ?)',
-                         [request.form['talk_title'],request.form['talk_body'],'user_id'])
+                         [request.form['talk_title'],request.form['talk_body'],g.user['user_id']])
             g.db.commit()
             return redirect(url_for('talk'))
     return render_template('talk_write.html', error=error)
