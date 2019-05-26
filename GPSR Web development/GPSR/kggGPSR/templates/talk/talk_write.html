@@ -1,0 +1,24 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+<html>
+    <head>
+        <title>GPSR | algorithm study</title>
+    </head>
+    <body>
+        <h1>Write</h1>
+        <hr>
+        {% if error %}<div><strong>Error:</strong> {{ error }}</div>{% endif %}
+        <div class=talkbox>
+            <form action="/talk/add" method=post>
+                <h2>Title</h2> 
+                <input type=text name=talk_title size=60>
+                <br>
+                <h2>Text</h2>
+                <textarea name=talk_body cols="140" rows="40"></textarea>
+                <br/>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </body>
+</html>

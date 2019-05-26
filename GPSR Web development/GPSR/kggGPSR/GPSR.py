@@ -131,19 +131,73 @@ def group():
 
 @app.route('/problem',methods=['GET','POST'])
 def problem():
+    if not g.user:
+        return redirect(url_for('home'))
     problem_list=query_db('select * from problem')
-    return render_template('problem.html', problem_list=problem_list)
+    return render_template('/problem/problem.html', problem_list=problem_list)
     
 @app.route('/problem/<problem_num>', methods=['GET', 'POST'])
 def problem_view(problem_num):
     problem = query_db('select * from problem where problem_num is ?', [problem_num])
+    return render_template('/problem/problem_view.html', problem=problem)
+
+@app.route('/problem/<problem_num>/view_io')
+def problem_view_io(problem_num):
     return "hi"
 
+@app.route('/problem/compile', methods=['GET', 'POST'])
+def problem_compile():
+    g.db.execute('insert into answer(answer_problem_num,answer_who,answer_text,answer_result) values(?, ?, ?, ?)',
+                         [request.form['answer_problem_num'],g.user['user_id'],request.form['answer_text'], 0])
+    g.db.commit()
+    temp_answer_num = query_db('select answer_num from answer order by answer_num desc limit ?',[1])
+    print()
+    answer = query_db('select * from answer where answer_num is ?', [temp_answer_num[0]['answer_num']])
+    
+    file=open('test_file.c', 'w')
+    a = answer[0]
+    file.write(a['answer_text'])
+    file.close()
+
+    f = os.system('gcc test_file.c')
+    if f == 0:
+        print("!!!")
+        os.system('a.exe')
+        os.remove('a.exe')
+    #os.remove('test_file.c')
+    
+    return render_template('/problem/problem_result.html',answer=answer)
 
 @app.route('/talk',methods=['GET','POST'])
 def talk():
-    return render_template('talk.html')
+    if not g.user:
+        return redirect(url_for('home'))
+    talk_list=query_db('select * from board')
+    return render_template('/talk/talk.html', talk_list=talk_list)
 
+@app.route('/talk/<board_num>', methods=['GET','POST'])
+def talk_view(board_num):
+    talk = query_db('select * from board where board_num is ?', [board_num])
+    return render_template('/talk/talk_view.html',talk=talk)
+
+@app.route('/talk/write')
+def talk_write():
+    return render_template('/talk/talk_write.html')
+
+@app.route('/talk/add',methods=['GET','POST'])
+def talk_add():
+    error=None
+    if request.method == 'POST':
+        if not request.form['talk_title']:
+            error="You have to enter a title"
+        elif not request.form['talk_body']:
+            error="You have to enter a body"
+        else:
+            g.db.execute('insert into board (board_name, board_text, board_who) values (?, ?, ?)',
+                         [request.form['talk_title'],request.form['talk_body'],'user_id'])
+            g.db.commit()
+            return redirect(url_for('talk'))
+    return render_template('talk_write.html', error=error)
 
 @app.route('/geonguprincesssecretroom')
 def admin():

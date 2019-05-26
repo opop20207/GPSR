@@ -1,0 +1,19 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+<html>
+    <head>
+        <title>GPSR | algorithm study</title>
+    </head>
+    <body>
+        {% if talk %}
+        <h1>talk #{{talk[0].board_num}}</h1>
+        <hr>
+        <h2>{{talk[0].board_name}}</h2>
+        <hr>
+        <pre>{{talk[0].board_text}}</pre>
+        {% else %}
+
+        {% endif %}
+    </body>
+</html>
