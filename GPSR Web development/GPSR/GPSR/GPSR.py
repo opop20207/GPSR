@@ -190,7 +190,40 @@ def problem_compile():
 
 @app.route('/talk',methods=['GET','POST'])
 def talk():
-    return render_template('talk.html')
+    if not g.user:
+        return redirect(url_for('home'))
+    talk_list=query_db('select * from board')
+    return render_template('/talk/talk.html', talk_list=talk_list)
+
+@app.route('/talk/<board_num>', methods=['GET','POST'])
+def talk_view(board_num):
+    talk = query_db('select * from board where board_num is ?', [board_num])
+    return render_template('/talk/talk_view.html',talk=talk, who_id=g.user['user_id'])
+
+@app.route('/talk/write')
+def talk_write():
+    return render_template('/talk/talk_write.html')
+
+@app.route('/talk/add',methods=['GET','POST'])
+def talk_add():
+    error=None
+    if request.method == 'POST':
+        if not request.form['talk_title']:
+            error="You have to enter a title"
+        elif not request.form['talk_body']:
+            error="You have to enter a body"
+        else:
+            g.db.execute('insert into board (board_name, board_text, board_who) values (?, ?, ?)',
+                         [request.form['talk_title'],request.form['talk_body'],g.user['user_id']])
+            g.db.commit()
+            return redirect(url_for('talk'))
+    return render_template('/talk/talk_write.html', error=error)
+
+@app.route('/talk/delete/<board_num>',methods=['POST','GET'])
+def talk_delete(board_num):
+    g.db.execute('delete from board where board_num = ?', board_num)
+    g.db.commit()
+    return redirect(url_for('talk'))
 
 #######################################################################################################################################################
 #######################################################################################################################################################
