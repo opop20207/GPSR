@@ -14,11 +14,14 @@
         <pre>{{problem[0].problem_text}}</pre>
         <hr>
         <h3><a href="{{url_for('problem_view_io',
-            problem_num=problem_problem_num)}}">input/output ex</a></h3>
+            problem_num=problem[0].problem_num)}}">input/output ex</a></h3>
         <hr>
-        <form action="/problem/compile" method=post>
+        <form action="/problem/compile" method="post">
             <h3>your code</h3>
-            <textarea name=answer_text cols="100" rows="40"></textarea>
+            <h4>problem number</h4>
+            <input type="number" name="answer_problem_num" size="15" value="{{problem[0].problem_num}}" readonly>
+            <hr>
+            <textarea name="answer_text" cols="100" rows="40"></textarea>
             <br/>
             <button type="submit">Submit</button>
         </form>
