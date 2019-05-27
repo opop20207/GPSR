@@ -1,0 +1,13 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+<html>
+    <head>
+        <title>GPSR | algorithm study</title>
+    </head>
+    <body>
+        {% for key, i in user.items() %}
+            <h3>{{key}} : {{i}}</h3>
+        {% endfor %}
+    </body>
+</html>
