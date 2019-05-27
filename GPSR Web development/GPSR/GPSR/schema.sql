@@ -23,3 +23,17 @@ create table if not exists board (
   board_name string not null,
   board_text string not null
 );
+
+create table if not exists answer (
+  answer_num integer primary key autoincrement,
+  answer_problem_num integer,
+  answer_who string not null,
+  answer_text string not null,
+  answer_result integer
+);
+
+create table if not exists io(
+  io_problem_num integer,
+  io_input string not null,
+  io_output string not null
+);

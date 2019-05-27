@@ -7,6 +7,7 @@ from contextlib import closing
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash
 from werkzeug.security import check_password_hash, generate_password_hash
+import os
 
 #settings
 DEBUG=True
@@ -17,6 +18,10 @@ SECRET_KEY = 'development key'
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('GPSR_SETTINGS', silent=True)
+
+######################################################################################################################################################
+#######################################################################################################################################################
+#base function
 
 def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
@@ -42,7 +47,9 @@ def get_user_num(id):
         return chk[0]
     else:
         return None
-
+#######################################################################################################################################################
+#######################################################################################################################################################
+#before, teardown function
 
 @app.before_request
 def before_request():
@@ -58,6 +65,9 @@ def teardown_request(exception):
     if hasattr(g, 'db'):
         g.db.close()
 
+#######################################################################################################################################################
+#######################################################################################################################################################
+#home
 
 @app.route('/')
 def home():
@@ -123,75 +133,115 @@ def logout():
     session.pop('user_num', None)
     return redirect(url_for('home'))
 
+#######################################################################################################################################################
+#######################################################################################################################################################
+#group
 
 @app.route('/group',methods=['GET','POST'])
 def group():
     return render_template('group.html')
 
+#######################################################################################################################################################
+#######################################################################################################################################################
+#problem
 
 @app.route('/problem',methods=['GET','POST'])
 def problem():
+    if not g.user:
+        return redirect(url_for('home'))
     problem_list=query_db('select * from problem')
-    return render_template('problem.html', problem_list=problem_list)
+    return render_template('/problem/problem.html', problem_list=problem_list)
     
 @app.route('/problem/<problem_num>', methods=['GET', 'POST'])
 def problem_view(problem_num):
     problem = query_db('select * from problem where problem_num is ?', [problem_num])
+    return render_template('/problem/problem_view.html', problem=problem)
+
+@app.route('/problem/<problem_num>/view_io')
+def problem_view_io(problem_num):
     return "hi"
 
+@app.route('/problem/compile', methods=['GET', 'POST'])
+def problem_compile():
+    g.db.execute('insert into answer(answer_problem_num,answer_who,answer_text,answer_result) values(?, ?, ?, ?)',
+                         [request.form['answer_problem_num'],g.user['user_id'],request.form['answer_text'], 0])
+    g.db.commit()
+    temp_answer_num = query_db('select answer_num from answer order by answer_num desc limit ?',[1])
+    print()
+    answer = query_db('select * from answer where answer_num is ?', [temp_answer_num[0]['answer_num']])
+    
+    file=open('test_file.c', 'w')
+    a = answer[0]
+    file.write(a['answer_text'])
+    file.close()
+
+    f = os.system('gcc test_file.c')
+    if f == 0:
+        print("!!!")
+        os.system('a.exe')
+        os.remove('a.exe')
+    #os.remove('test_file.c')
+    
+    return render_template('/problem/problem_result.html',answer=answer)
+
+#######################################################################################################################################################
+#######################################################################################################################################################
+#talk
 
 @app.route('/talk',methods=['GET','POST'])
 def talk():
     return render_template('talk.html')
 
+#######################################################################################################################################################
+#######################################################################################################################################################
+#admin
 
 @app.route('/geonguprincesssecretroom')
 def admin():
     return render_template('/admin/admin.html')
-
 
 #view user_list
 @app.route('/geonguprincesssecretroom/view_user')
 def admin_view_user():
     return render_template('/admin/admin_view_user.html',users=query_db('''
     select * from user limit?''', [PER_PAGE]))
+    
+@app.route('/geonguprincesssecretroom/view_problem')
+def admin_view_problem():
+    return render_template('/admin/admin_view_problem.html',problems=query_db('''
+    select * from problem limit?''', [PER_PAGE]))
+
+#all of user information
+@app.route('/geonguprincesssecretroom/view_user_info/<user_id>')
+def admin_view_user_info(user_id):
+    user = query_db('select * from user where user_id = ?', [user_id], True)
+    return render_template('/admin/admin_view_user_info.html', user=user)
 
 #user delete
 @app.route('/geonguprincesssecretroom/delete_user/<user_id>')
 def admin_delete_user(user_id):
     g.db.execute('delete from user where user_id = ?', [user_id])
     g.db.commit()
-    return redirect(url_for('/admin/admin_view_user',user_id=user_id))
-
-#all of user information
-@app.route('/geonguprincesssecretroom/view_info/<user_id>')
-def admin_view_info(user_id):
-    user = query_db('select * from user where user_id = ?', [user_id], True)
-    return render_template('/admin/admin_view_info.html', user=user)
-
-@app.route('/geonguprincesssecretroom/view_problem')
-def admin_view_problem():
-    return render_template('/admin/admin_view_problem.html',problems=query_db('''
-    select * from problem limit?''', [PER_PAGE]))
-
-@app.route('/geonguprincesssecretroom/add',methods=['POST'])
-def add():
-    error=None
-    if request.method == 'POST':
-        if not request.form['problem_title']:
-            error="You have to enter a title"
-        elif not request.form['problem_body']:
-            error="You have to enter a body"
-        else:
-            g.db.execute('insert into problem(problem_name,problem_correct,problem_text) values(?, ?, ?)',
-                         [request.form['problem_title'], 0, request.form['problem_body']])
-            g.db.commit()
-            return redirect(url_for('admin_view_problem'))
-    return render_template('admin/admin_add_problem.html', error=error)
+    return redirect(url_for('admin_view_user'))
 
 @app.route('/geonguprincesssecretroom/add_problem')
 def admin_add_problem():
     return render_template('/admin/admin_add_problem.html', error=None)
+
+@app.route('/geonguprincesssecretroom/add_problem_exe',methods=['POST'])
+def admin_add_problem_exe():
+    error=None
+    if request.method == 'POST':
+        if not request.form['problem_name']:
+            error="You have to enter a name"
+        elif not request.form['problem_text']:
+            error="You have to enter a text"
+        else:
+            g.db.execute('insert into problem(problem_name,problem_correct,problem_text) values(?, ?, ?)',
+                         [request.form['problem_name'], 0, request.form['problem_text']])
+            g.db.commit()
+            return redirect(url_for('admin_view_problem'))
+    return render_template('/admin/admin_add_problem.html', error=error)
 
 @app.route('/geonguprincesssecretroom/delete_problem/<problem_num>')
 def admin_delete_problem(problem_num):
@@ -199,11 +249,13 @@ def admin_delete_problem(problem_num):
     g.db.commit()
     return redirect(url_for('admin_view_problem'))
 
-@app.route('/geonguprincesssecretroom/view_info_more_problem/<problem_num>')
-def admin_view_more_problem(problem_num):
+@app.route('/geonguprincesssecretroom/view_problem_info/<problem_num>')
+def admin_view_problem_info(problem_num):
     problem = query_db('select * from problem where problem_num = ?', [problem_num], True)
-    return render_template('/admin/admin_view_info_problem.html', problem=problem, problem_ret=problem["problem_text"])
+    return render_template('/admin/admin_view_problem_info.html', problem=problem, problem_ret=problem["problem_text"])
 
+#######################################################################################################################################################
+#######################################################################################################################################################
 
 if __name__ == '__main__' :
     init_db()
