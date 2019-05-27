@@ -21,12 +21,14 @@ create table if not exists follow (
 create table if not exists board (
   board_num integer primary key autoincrement,
   board_name string not null,
-  board_text string not null
+  board_text string not null,
+  board_who string not null
 );
 
 create table if not exists answer (
   answer_num integer primary key autoincrement,
   answer_problem_num integer,
+  answer_language string not null,
   answer_who string not null,
   answer_text string not null,
   answer_result integer

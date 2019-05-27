@@ -6,6 +6,9 @@
         <title>GPSR | algorithm study</title>
     </head>
     <body>
+        {% if error %}
+        <h1>{{error}}</h1>
+        {% endif %}
         {% if answer %}
         <h2>{{answer[0].answer_problem_num}}</h2>
         <h2>{{answer[0].answer_num}}</h2>

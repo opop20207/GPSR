@@ -163,26 +163,97 @@ def problem_view_io(problem_num):
 
 @app.route('/problem/compile', methods=['GET', 'POST'])
 def problem_compile():
-    g.db.execute('insert into answer(answer_problem_num,answer_who,answer_text,answer_result) values(?, ?, ?, ?)',
-                         [request.form['answer_problem_num'],g.user['user_id'],request.form['answer_text'], 0])
+    g.db.execute('insert into answer(answer_problem_num,answer_language,answer_who,answer_text,answer_result) values(?, ?, ?, ?, ?)',
+                         [request.form['answer_problem_num'],request.form['language'],g.user['user_id'],request.form['answer_text'], 0])
     g.db.commit()
     temp_answer_num = query_db('select answer_num from answer order by answer_num desc limit ?',[1])
-    print()
     answer = query_db('select * from answer where answer_num is ?', [temp_answer_num[0]['answer_num']])
     
+    a=answer[0]
+    
+    if a['answer_language'] == 'C':
+        error = problem_compile_C(answer)
+    elif a['answer_language'] == 'C++':
+        error = problem_compile_Cpp(answer)
+    elif a['answer_language'] == 'Java':
+        error = problem_compile_Java(answer)
+    elif a['answer_language']=='Python':
+        error = problem_compile_Python(answer)
+    return render_template('/problem/problem_result.html', error=error, answer=answer)
+
+def problem_compile_C(answer):
     file=open('test_file.c', 'w')
     a = answer[0]
     file.write(a['answer_text'])
     file.close()
-
+    
+    command_inputfile = 'io'
+    command_inputfile += '/'
+    command_inputfile += str(a['answer_problem_num'])
+    command_inputfile += '/'
+    command_inputfile += str(a['answer_problem_num'])
+    command_inputfile += '.in'
+    
+    command_outputfile = 'io'
+    command_outputfile += '/'
+    command_outputfile += str(a['answer_problem_num'])
+    command_outputfile += '/'
+    command_outputfile += str(a['answer_problem_num'])
+    command_outputfile += '.out'
+    
     f = os.system('gcc test_file.c')
     if f == 0:
-        print("!!!")
-        os.system('a.exe')
+        temp1 = os.popen('a.exe < '+command_inputfile, "r").read()
+        temp2 = open(command_outputfile, "r").read()
+        print(temp1)
+        print(temp2)
         os.remove('a.exe')
-    #os.remove('test_file.c')
+        if temp1 == temp2:
+            error="success"
+        else:
+            error="wrong!"
+    else:
+        error="compile error"
+    os.remove('test_file.c')
     
-    return render_template('/problem/problem_result.html',answer=answer)
+    return error
+
+def problem_compile_Cpp(answer):
+    file=open('test_file.cpp', 'w')
+    a = answer[0]
+    file.write(a['answer_text'])
+    file.close()
+    
+    command_inputfile = 'io'
+    command_inputfile += '/'
+    command_inputfile += str(a['answer_problem_num'])
+    command_inputfile += '/'
+    command_inputfile += str(a['answer_problem_num'])
+    command_inputfile += '.in'
+    
+    command_outputfile = 'io'
+    command_outputfile += '/'
+    command_outputfile += str(a['answer_problem_num'])
+    command_outputfile += '/'
+    command_outputfile += str(a['answer_problem_num'])
+    command_outputfile += '.out'
+    
+    f = os.system('g++ test_file.cpp')
+    if f == 0:
+        temp1 = os.popen('a.exe < '+command_inputfile, "r").read()
+        temp2 = open(command_outputfile, "r").read()
+        print(temp1)
+        print(temp2)
+        os.remove('a.exe')
+        if temp1 == temp2:
+            error="success"
+        else:
+            error="wrong!"
+    else:
+        error="compile error"
+    os.remove('test_file.cpp')
+    
+    return error
 
 #######################################################################################################################################################
 #######################################################################################################################################################
@@ -190,7 +261,40 @@ def problem_compile():
 
 @app.route('/talk',methods=['GET','POST'])
 def talk():
-    return render_template('talk.html')
+    if not g.user:
+        return redirect(url_for('home'))
+    talk_list=query_db('select * from board')
+    return render_template('/talk/talk.html', talk_list=talk_list)
+
+@app.route('/talk/<board_num>', methods=['GET','POST'])
+def talk_view(board_num):
+    talk = query_db('select * from board where board_num is ?', [board_num])
+    return render_template('/talk/talk_view.html',talk=talk, who_id=g.user['user_id'])
+
+@app.route('/talk/write')
+def talk_write():
+    return render_template('/talk/talk_write.html')
+
+@app.route('/talk/add',methods=['GET','POST'])
+def talk_add():
+    error=None
+    if request.method == 'POST':
+        if not request.form['talk_title']:
+            error="You have to enter a title"
+        elif not request.form['talk_body']:
+            error="You have to enter a body"
+        else:
+            g.db.execute('insert into board (board_name, board_text, board_who) values (?, ?, ?)',
+                         [request.form['talk_title'],request.form['talk_body'],g.user['user_id']])
+            g.db.commit()
+            return redirect(url_for('talk'))
+    return render_template('/talk/talk_write.html', error=error)
+
+@app.route('/talk/delete/<board_num>',methods=['POST','GET'])
+def talk_delete(board_num):
+    g.db.execute('delete from board where board_num = ?', board_num)
+    g.db.commit()
+    return redirect(url_for('talk'))
 
 #######################################################################################################################################################
 #######################################################################################################################################################
