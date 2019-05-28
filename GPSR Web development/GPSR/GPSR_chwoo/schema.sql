@@ -25,6 +25,13 @@ create table if not exists board (
   board_who string not null
 );
 
+create table if not exists comment (
+  comment_num integer primary key autoincrement,
+  comment_text string not null,
+  comment_who string not null,
+  comment_N integer
+);
+
 create table if not exists answer (
   answer_num integer primary key autoincrement,
   answer_problem_num integer,
@@ -32,6 +39,7 @@ create table if not exists answer (
   answer_text string not null,
   answer_result integer
 );
+
 
 create table if not exists io(
   io_problem_num integer,

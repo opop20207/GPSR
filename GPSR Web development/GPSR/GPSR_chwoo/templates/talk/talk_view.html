@@ -25,9 +25,22 @@
         <hr>
         <form action="/comment/add" method=post>
             <h2>Comment</h2>
+            {% if error %}<div><strong>Error:</strong> {{ error }}</div>{% endif %}
+            <input type=number name=board_num size=10 value={{talk[0].board_num}} readonly>
+            <br>
+            
             <textarea name=comment_text cols="120" rows="2"></textarea>
             <br/>
             <button type="submit">Comment</button>
         </form>
+        {% for i in comment_list %}
+            {% if i.comment_N == talk[0].board_num %}
+                <h4>{{i.comment_who}} : {{ i.comment_text }}
+                    {% if i.comment_who == who_id %} |
+                    <a href="{{url_for('comment_delete',comment_num=i.comment_num,board_num=talk[0].board_num)}}">delete</a>
+                    {% endif %}
+                    </h4>
+            {% endif %}
+        {% endfor %}
     </body>
 </html>

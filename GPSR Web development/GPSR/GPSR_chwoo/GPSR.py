@@ -198,7 +198,8 @@ def talk():
 @app.route('/talk/<board_num>', methods=['GET','POST'])
 def talk_view(board_num):
     talk = query_db('select * from board where board_num is ?', [board_num])
-    return render_template('/talk/talk_view.html',talk=talk, who_id=g.user['user_id'])
+    comment_list=query_db('select * from comment')
+    return render_template('/talk/talk_view.html',talk=talk, who_id=g.user['user_id'],comment_list=comment_list)
 
 @app.route('/talk/write')
 def talk_write():
@@ -227,11 +228,27 @@ def talk_delete(board_num):
 
 @app.route('/comment/add',methods=['POST','GET'])
 def comment_add():
-    g.db.execute('insert into comment (board_num, comment_text, comment_who) values (?, ?, ?)',
-                         [request.form['board_num'],request.form['talk_body'],g.user['user_id']])
+    error=None
+    if request.method == 'POST':
+        if not request.form['comment_text']:
+            error="You have to enter a comment"
+        else:
+            board_num=request.form['board_num']
+            g.db.execute('insert into comment (comment_text, comment_who, comment_N) values (?, ?, ?)',
+                         [request.form['comment_text'],g.user['user_id'],board_num])
+            g.db.commit()
+            return redirect(url_for('talk_view', board_num=board_num))
+    talk = query_db('select * from board where board_num is ?', [request.form['board_num']])
+    comment_list=query_db('select * from comment')
+    return render_template('/talk/talk_view.html',talk=talk, error=error, who_id=g.user['user_id'],comment_list=comment_list)
+    
+@app.route('/comment/delete',methods=['POST','GET'])
+def comment_delete():
+    comment_num=request.args.get('comment_num')
+    board_num=request.args.get('board_num')
+    g.db.execute('delete from comment where comment_num = ?', [comment_num])
     g.db.commit()
-    return redirect(url_for('talk'))
-
+    return redirect(url_for('talk_view', board_num=board_num))
 
 #######################################################################################################################################################
 #######################################################################################################################################################
