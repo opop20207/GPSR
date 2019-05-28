@@ -100,3 +100,14 @@ div.register{
         float:left;
         text-align: center;
     }
+
+
+div.problem{
+    width:100%;
+    height: 100%;
+   
+}
+    div.problem div.problem_content{
+        margin-left:2.5%;
+        margin-right:2.5%
+    }

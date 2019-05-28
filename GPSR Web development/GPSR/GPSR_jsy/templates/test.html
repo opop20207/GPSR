@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<script src="static/codemirror/lib/codemirror.js"></script>
+<link rel="stylesheet" href="/static/codemirror/lib/codemirror.css" />
+<script src="static/codemirror/mode/clike/clike.js"></script>
+<link rel="stylesheet" href="static/codemirror/theme/dracula.css" />
+<body>
+    <textarea id="editor" name="answer_text" cols="100" rows="40"></textarea>
+    <script>
+        var editor = CodeMirror.fromTextArea
+        (document.getElementById('editor'),{
+            mode:"clike",
+            theme: "dracula",
+            lineNumbers: true
+        });
+    </script>
+</body>

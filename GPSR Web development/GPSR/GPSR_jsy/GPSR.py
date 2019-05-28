@@ -8,16 +8,9 @@ from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 import os
-
 #settings
-DEBUG=True
-DATABASE='GPSR.db'
-PER_PAGE=30
-SECRET_KEY = 'development key'
-
 app = Flask(__name__)
-app.config.from_object(__name__)
-app.config.from_envvar('GPSR_SETTINGS', silent=True)
+app.config.from_pyfile('config.py')
 
 ######################################################################################################################################################
 #######################################################################################################################################################
@@ -68,7 +61,6 @@ def teardown_request(exception):
 #######################################################################################################################################################
 #######################################################################################################################################################
 #home
-
 @app.route('/')
 def home():
     uiid=None
@@ -163,43 +155,41 @@ def problem_view_io(problem_num):
 
 @app.route('/problem/compile', methods=['GET', 'POST'])
 def problem_compile():
-    g.db.execute('insert into answer(answer_problem_num,answer_language,answer_who,answer_text,answer_result) values(?, ?, ?, ?, ?)',
-                         [request.form['answer_problem_num'],request.form['language'],g.user['user_id'],request.form['answer_text'], 0])
-    g.db.commit()
-    temp_answer_num = query_db('select answer_num from answer order by answer_num desc limit ?',[1])
-    answer = query_db('select * from answer where answer_num is ?', [temp_answer_num[0]['answer_num']])
-    
-    a=answer[0]
+    a={'answer_problem_num':request.form['answer_problem_num'],
+       'answer_language':request.form['language'],
+       'answer_who':g.user['user_id'],
+       'answer_text':request.form['answer_text'],
+       'answer_result':0}
     
     if a['answer_language'] == 'C':
-        error = problem_compile_C(answer)
+        res = problem_compile_C(a)
     elif a['answer_language'] == 'C++':
-        error = problem_compile_Cpp(answer)
+        res = problem_compile_Cpp(a)
     elif a['answer_language'] == 'Java':
-        error = problem_compile_Java(answer)
+        res = problem_compile_Java(a)
     elif a['answer_language']=='Python':
-        error = problem_compile_Python(answer)
-    return render_template('/problem/problem_result.html', error=error, answer=answer)
+        res = problem_compile_Python(a)
+        
+    if res==0:
+        error="compile error!"
+    elif res==1:
+        error="Wrong!"
+    elif res==2:
+        error="Success!"
+    
+    a['answer_result']=res
+    g.db.execute('insert into answer(answer_problem_num, answer_language,answer_who,answer_text,answer_result) values(?,?,?,?,?)',
+                 [a['answer_problem_num'],a['answer_language'],a['answer_who'],a['answer_text'],res])
+    g.db.commit()
+    return render_template('/problem/problem_result.html', error=error, a=a)
 
-def problem_compile_C(answer):
+def problem_compile_C(a):
     file=open('test_file.c', 'w')
-    a = answer[0]
     file.write(a['answer_text'])
     file.close()
     
-    command_inputfile = 'io'
-    command_inputfile += '/'
-    command_inputfile += str(a['answer_problem_num'])
-    command_inputfile += '/'
-    command_inputfile += str(a['answer_problem_num'])
-    command_inputfile += '.in'
-    
-    command_outputfile = 'io'
-    command_outputfile += '/'
-    command_outputfile += str(a['answer_problem_num'])
-    command_outputfile += '/'
-    command_outputfile += str(a['answer_problem_num'])
-    command_outputfile += '.out'
+    command_inputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.in'    
+    command_outputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.out'
     
     f = os.system('gcc test_file.c')
     if f == 0:
@@ -209,34 +199,22 @@ def problem_compile_C(answer):
         print(temp2)
         os.remove('a.exe')
         if temp1 == temp2:
-            error="success"
+            res=2
         else:
-            error="wrong!"
+            res=1
     else:
-        error="compile error"
+        res=0
     os.remove('test_file.c')
     
-    return error
+    return res
 
-def problem_compile_Cpp(answer):
+def problem_compile_Cpp(a):
     file=open('test_file.cpp', 'w')
-    a = answer[0]
     file.write(a['answer_text'])
     file.close()
     
-    command_inputfile = 'io'
-    command_inputfile += '/'
-    command_inputfile += str(a['answer_problem_num'])
-    command_inputfile += '/'
-    command_inputfile += str(a['answer_problem_num'])
-    command_inputfile += '.in'
-    
-    command_outputfile = 'io'
-    command_outputfile += '/'
-    command_outputfile += str(a['answer_problem_num'])
-    command_outputfile += '/'
-    command_outputfile += str(a['answer_problem_num'])
-    command_outputfile += '.out'
+    command_inputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.in'    
+    command_outputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.out'
     
     f = os.system('g++ test_file.cpp')
     if f == 0:
@@ -246,14 +224,63 @@ def problem_compile_Cpp(answer):
         print(temp2)
         os.remove('a.exe')
         if temp1 == temp2:
-            error="success"
+            res=2
         else:
-            error="wrong!"
+            res=1
     else:
-        error="compile error"
+        res=0
     os.remove('test_file.cpp')
     
-    return error
+    return res
+
+def problem_compile_Java(a):
+    file=open('test_file.java', 'w')
+    file.write(a['answer_text'])
+    file.close()
+    
+    command_inputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.in'    
+    command_outputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.out'
+    
+    f = os.system('javac test_file.java')
+    if f == 0:
+        temp1 = os.popen('java Main < '+command_inputfile, "r").read()
+        temp2 = open(command_outputfile, "r").read()
+        print(temp1)
+        print(temp2)
+        if temp1 == temp2:
+            res=2
+        else:
+            res=1
+        os.remove('Main.class')
+    else:
+        res=0
+    os.remove('test_file.java')
+    
+    return res
+
+def problem_compile_Python(a):
+    file=open('test_file.py', 'w')
+    file.write(a['answer_text'])
+    file.close()
+    
+    command_inputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.in'    
+    command_outputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.out'
+    
+    f = os.system('python -m py_compile test_file.py')
+    if f == 0:
+        temp1 = os.popen('python test_file.py < '+command_inputfile, "r").read()
+        temp2 = open(command_outputfile, "r").read()
+        print(temp1)
+        print(temp2)
+        if temp1 == temp2:
+            res=2
+        else:
+            res=1
+    else:
+        res=0
+    os.remove('test_file.py')
+    
+    return res
 
 #######################################################################################################################################################
 #######################################################################################################################################################
@@ -338,11 +365,15 @@ def admin_add_problem_exe():
     if request.method == 'POST':
         if not request.form['problem_name']:
             error="You have to enter a name"
-        elif not request.form['problem_text']:
-            error="You have to enter a text"
+        elif not request.form['problem_text_info']:
+            error="You have to enter a text_info"
+        elif not request.form['problem_text_input_info']:
+            error="You have to enter a text_input_info"
+        elif not request.form['problem_text_output_info']:
+            error="You have to enter a text_output_info"
         else:
-            g.db.execute('insert into problem(problem_name,problem_correct,problem_text) values(?, ?, ?)',
-                         [request.form['problem_name'], 0, request.form['problem_text']])
+            g.db.execute('insert into problem(problem_name,problem_correct,problem_text_info,problem_text_input_info,problem_text_output_info) values(?, ?, ?, ?, ?)',
+                         [request.form['problem_name'], 0, request.form['problem_text_info'],request.form['problem_text_input_info'],request.form['problem_text_output_info']])
             g.db.commit()
             return redirect(url_for('admin_view_problem'))
     return render_template('/admin/admin_add_problem.html', error=error)
@@ -356,7 +387,7 @@ def admin_delete_problem(problem_num):
 @app.route('/geonguprincesssecretroom/view_problem_info/<problem_num>')
 def admin_view_problem_info(problem_num):
     problem = query_db('select * from problem where problem_num = ?', [problem_num], True)
-    return render_template('/admin/admin_view_problem_info.html', problem=problem, problem_ret=problem["problem_text"])
+    return render_template('/admin/admin_view_problem_info.html', problem=problem)
 
 #######################################################################################################################################################
 #######################################################################################################################################################
