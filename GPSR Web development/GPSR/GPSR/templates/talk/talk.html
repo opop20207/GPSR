@@ -11,9 +11,9 @@
         <h2><strong><a href="{{ url_for('talk_write') }}">Write</a></strong></h2>
         <hr>
         {% for i in talk_list %}
-            <h4>talk #{{i.board_num}} |
+            <h4>talk #{{i.board_num}} | {{ i.board_name }} 
                 <a href="{{ url_for('talk_view', board_num=i.board_num) }}">
-                    {{ i["board_name"] }}</a></h4>
+                    more</a></h4>
         {% endfor %}
     </body>
 </html>

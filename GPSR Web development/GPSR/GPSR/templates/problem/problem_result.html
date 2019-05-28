@@ -6,12 +6,14 @@
         <title>GPSR | algorithm study</title>
     </head>
     <body>
-        {% if answer %}
-        <h2>{{answer[0].answer_problem_num}}</h2>
-        <h2>{{answer[0].answer_num}}</h2>
-        <pre>{{answer[0].answer_text}}</pre>
-        <h3>{{answer[0].answer_who}}</h3>
-        <h3>{{answer[0].answer_result}}</h3>
+        {% if error %}
+        <h1>{{error}}</h1>
+        {% endif %}
+        {% if a %}
+        <h2>{{a.answer_problem_num}}</h2>
+        <pre>{{a.answer_text}}</pre>
+        <h3>{{a.answer_who}}</h3>
+        <h3>{{a.answer_result}}</h3>
         {% else %}
         <h3>no page</h3>
         {% endif %}

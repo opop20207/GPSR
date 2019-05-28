@@ -10,7 +10,9 @@ create table if not exists problem (
   problem_num integer primary key autoincrement, 
   problem_name string not null,
   problem_correct integer,
-  problem_text string not null
+  problem_text_info string not null,
+  problem_text_input_info string not null,
+  problem_text_output_info string not null
 );
 
 create table if not exists follow (
@@ -28,6 +30,7 @@ create table if not exists board (
 create table if not exists answer (
   answer_num integer primary key autoincrement,
   answer_problem_num integer,
+  answer_language string not null,
   answer_who string not null,
   answer_text string not null,
   answer_result integer

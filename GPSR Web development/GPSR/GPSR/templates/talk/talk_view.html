@@ -14,13 +14,14 @@
         <h3>Author : {{talk[0].board_who}}
             {% if talk[0].board_who == who_id %} |
             <a href="{{url_for('talk_delete',board_num=talk[0].board_num)}}">delete</a>
+            <a href="{{url_for('talk_change_view',board_num=talk[0].board_num)}}">change</a>
             {% endif %}
         </h3>
         <hr>
         <h2>Text</h2>
         <pre>{{talk[0].board_text}}</pre>
         {% else %}
-        <h3>There is no problem</h3>
+        <h3>There is no talk</h3>
         {% endif %}
     </body>
 </html>

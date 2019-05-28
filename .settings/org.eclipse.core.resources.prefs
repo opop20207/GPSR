@@ -1,4 +1,7 @@
 eclipse.preferences.version=1
+encoding//GPSR\ Web\ development/GPSR/GPSR/GPSR.py=UTF-8
+encoding//GPSR\ Web\ development/GPSR/GPSR/templates/admin/admin_view_problem_info.html=UTF-8
+encoding//GPSR\ Web\ development/GPSR/GPSR/templates/problem/problem_view.html=UTF-8
 encoding//GPSR\ Web\ development/GPSR/GPSR_jsy/static/codemirror/lib/codemirror.css=UTF-8
 encoding//GPSR\ Web\ development/GPSR/GPSR_jsy/static/codemirror/theme/darcula.css=UTF-8
 encoding//GPSR\ Web\ development/GPSR/GPSR_jsy/templates/admin/admin_add_problem.html=UTF-8
