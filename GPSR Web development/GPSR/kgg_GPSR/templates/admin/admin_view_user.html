@@ -1,0 +1,18 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<html>
+    <head>
+        <title>GPSR | algorithm study</title>
+    </head>
+    <body>
+        <h1>user list</h1>
+        <h2><strong><a href="{{ url_for('admin') }}">to admin</a></strong></h2>
+        <hr>
+        {% for user in users %}
+            {{user.user_id}}
+            <strong><a href="{{ url_for('admin_delete_user', user_id=user.user_id) }}">delete</a></strong>
+            <strong><a href="{{url_for('admin_view_user_info',user_id=user.user_id) }}">more</a></strong>
+            <br>
+        {% endfor %}
+    </body>
+</html>

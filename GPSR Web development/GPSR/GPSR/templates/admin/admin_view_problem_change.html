@@ -1,0 +1,40 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+<html>
+    <head>
+        <title>GPSR | algorithm study</title>
+    </head>
+    <body>
+        <h1><strong><a href="{{ url_for('admin') }}">to admin</a></strong></h1>
+        <h1>Problem</h1>
+        <hr>
+        {% if problem %}
+        <div class=talkbox>
+            <form action="/geonguprincesssecretroom/problem_changing" method=post>
+                <input type=number name=num value={{problem[0].problem_num}} readonly>
+                <h2>Title</h2> 
+                <input type=text name=problem_title size=60
+                value={{problem[0].problem_name}}>
+                <br>
+                <h2>Text</h2>
+                <textarea name=problem_body cols="140" rows="40">
+{{problem[0].problem_text_info}}
+                </textarea>
+                <br/>
+                <textarea name=problem_input cols="140" rows="40">
+{{problem[0].problem_text_input_info}}
+                </textarea>
+                <br/>
+                <textarea name=problem_output cols="140" rows="40">
+{{problem[0].problem_text_output_info}}
+                </textarea>
+                <br/>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        {% else %}
+        There is no Problem
+        {% endif %}
+    </body>
+</html>

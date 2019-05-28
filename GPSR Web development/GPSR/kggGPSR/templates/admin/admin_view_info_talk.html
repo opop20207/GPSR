@@ -1,9 +1,0 @@
-<!doctype html>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-
-<body>
-    <h2><strong><a href="{{ url_for('admin') }}">to admin</a></strong></h2>
-    {% for key, i in board.items() %}
-        <h3>{{key}} : {{i}}</h3>
-    {% endfor %}
-</body>

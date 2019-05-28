@@ -1,0 +1,19 @@
+<!doctype html>
+<meta charset="UTF-8">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+<html>
+    <head>
+        <title>GPSR | algorithm study</title>
+    </head>
+    <body>
+        <h2>Problem #{{problem["problem_num"]}}</h2>
+        <hr>
+        <h2>Problem</h2>
+        <pre>{{problem.problem_text_info}}</pre>
+        <h2>Input</h2>
+        <pre>{{problem.problem_text_input_info}}</pre>
+        <h2>Output</h2>
+        <pre>{{problem.problem_text_output_info}}</pre>
+    </body>
+</html>

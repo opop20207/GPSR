@@ -1,0 +1,97 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<html>
+    <head>
+	    <script src="/static/codemirror/lib/codemirror.js"></script>
+		<link rel="stylesheet" href="/static/codemirror/lib/codemirror.css" />
+		<script src="/static/codemirror/mode/clike/clike.js"></script>
+		<script src="/static/codemirror/mode/python/python.js"></script>
+		<link rel="stylesheet" href="/static/codemirror/theme/ambiance.css" />
+		<link rel="stylesheet" href="/static/codemirror/theme/base16-dark.css" />
+		<link rel="stylesheet" href="/static/codemirror/theme/base16-light.css" />
+		<link rel="stylesheet" href="/static/codemirror/theme/blackboard.css" />
+		<link rel="stylesheet" href="/static/codemirror/theme/abcdef.css" />
+		<link rel="stylesheet" href="/static/codemirror/theme/night.css" />
+		<link rel="stylesheet" href="/static/codemirror/theme/3024-night.css" />
+		<link rel="stylesheet" href="/static/codemirror/theme/vibrant-ink.css" />
+		
+		<script src="/static/codemirror/addon/edit/closebrackets.js"></script>
+		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+        <title>GPSR | algorithm study</title>
+    </head>
+    <body>
+        <div class=problem>
+            <div class=problem_content>
+	            {% if problem %}
+	            <h1>Problem #{{problem[0].problem_num}} <small>{{problem[0].problem_name}}</small> </h1>
+	            <hr>
+	            <h2>문제</h2>
+	            <pre>{{problem[0].problem_text_info}}</pre>
+	            <h2>입력</h2>
+	            <pre>{{problem[0].problem_text_input_info}}</pre>
+	            <h2>출력</h2>
+	            <pre>{{problem[0].problem_text_output_info}}</pre>
+	            <hr>
+	            <form action="/problem/compile" method="post">
+	                <h3>your code</h3>
+	                <h4>problem number</h4>
+	                <input type="number" name="answer_problem_num" size="13" value="{{problem[0].problem_num}}" readonly>
+	                <hr>
+	                <h4>Language</h4>
+	                <select name="language" class="language-select">
+	                    <option value="C" data-mime="text/x-csrc" selected = "selected">C</option>
+	                    <option value="C++" data-mime="text/x-c++src">C++</option>
+	                    <option value="Java" data-mime="text/x-java">Java</option>
+	                    <option value="Python" data-mime="text/x-python">Python</option>
+					</select>
+					<select name="theme" class="theme-select">
+						<option data-mime="3024-night">3024-night</option>
+						<option data-mime="ambiance">ambiance</option>
+	                    <option data-mime="blackboard">blackboard</option>
+	                    <option data-mime="night">night</option>
+						<option data-mime="vibrant-ink">vibrant-ink</option>
+						<option data-mime="abcdef">abcdef</option>
+						<option data-mime="base16-light">base16-light</option>
+						<option data-mime="base16-dark">base16-dark</option>
+					</select>
+	                <hr>
+	                <textarea id="editor" name="answer_text" cols="100" rows="40" autofocus></textarea>
+	                <script>
+	                	var editor = CodeMirror.fromTextArea
+						(document.getElementById("editor"),{
+							mode:"text/x-c++src",
+							tabSize:4,
+							lineNumbers: true,
+							theme:"3024-night",
+							autoCloseBrackets: true
+						});
+				    </script>
+	                <br/>
+	                <button type="submit">Submit</button>
+	            </form>
+	            {% else %}
+	            <h3>There is no problem</h3>
+	            {% endif %}
+            </div>
+        </div>
+		<script>
+			$('.language-select').change(function() {
+				changeLanguage();
+			});
+			$('.theme-select').change(function() {
+				changeTheme();
+			});
+			function changeLanguage() {
+				var sel = $('.language-select').eq(0).children('option:selected');
+				var mime = sel.attr('data-mime');
+				editor.setOption("mode", mime);
+			}
+			function changeTheme(){
+				var sel2 = $('.theme-select').eq(0).children('option:selected');
+				var mime2 = sel2.attr('data-mime');
+				editor.setOption("theme", mime2);
+			}
+		</script>
+    </body>
+</html>
+

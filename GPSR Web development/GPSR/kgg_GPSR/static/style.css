@@ -1,0 +1,113 @@
+body {
+    background: black;
+    font-family: "?‚˜?ˆ”?Š¤??˜ì–´ Light";
+    color:white;
+}
+
+a{
+    color:#a1a1a1;
+    text-decoration: none;
+}
+
+pre {
+    font-family: "³ª´®½ºÄù¾î Light";
+    color:white;
+    font-size: 13pt;
+}
+
+div.topbar {
+    width: 100%;
+    height: 140px;
+    background-color: black;
+    color: white;
+    
+}
+
+    div.topbar div.user_info {
+        width: 33%;
+        height: 100%;
+        float: left;
+        margin-left: 0.25%
+    }
+
+    div.topbar div.logo {
+        width: 33%;
+        height: 100%;
+        float: left;
+        text-align: center;
+        margin-left: 0.25%;
+        margin-right: 0.25%;
+    }
+
+    div.topbar div.navigation {
+        width: 33%;
+        height: 100%;
+        text-align: right;
+        float: left;
+        margin-right: 0.25%;
+    }
+
+div.page {
+    width: 100%;
+    height: auto;
+    background-color: black;
+    margin-top:10px;
+    margin-inline-start: 0.25%;
+}
+
+    div.page div.page_content {
+        width: 33%;
+        height: auto;
+        background-color: black;
+        float: left;
+        margin-right: 0.25%;
+    }
+
+div.login{
+    text-align: center;
+    color: white;
+    margin-left:30%;
+    margin-top:20%;
+    margin-right:30%;
+}
+
+    div.login div.box_img{
+        float:left;
+        text-align: center;
+    }
+
+    div.login div.box_text{
+        margin-left:15%;
+        float:left;
+        text-align: center;
+    }
+
+div.register{
+    text-align: center;
+    color: white;
+    margin-left:25%;
+    margin-top:20%;
+    margin-right:10%;
+}
+
+    div.register div.box_img{
+        float:left;
+        text-align: center;
+    }
+
+    div.register div.box_text{
+        margin-left:15%;
+        float:left;
+        text-align: center;
+    }
+
+
+div.problem{
+    width:100%;
+    height: 100%;
+   
+}
+    div.problem div.problem_content{
+        margin-left:2.5%;
+        margin-right:2.5%
+    }
