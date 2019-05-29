@@ -14,6 +14,7 @@
             {{ problem.problem_name }}
             <strong><a href="{{url_for('admin_view_problem_info',problem_num=problem.problem_num) }}">more</a></strong>
             <strong><a href="{{ url_for('admin_delete_problem', problem_num=problem.problem_num) }}">delete</a></strong>
+            <strong><a href="{{ url_for('admin_problem_change_view', problem_num=problem.problem_num) }}">change</a></strong>
             <br>
         {% endfor %}
     </body>
