@@ -132,7 +132,41 @@ def logout():
 
 @app.route('/group',methods=['GET','POST'])
 def group():
-    return render_template('group.html')
+    if not g.user:
+        return redirect(url_for('home'))
+    group_list = query_db('select * from team')
+    return render_template('/group/group.html', group=group_list)
+
+@app.route('/group/add',methods=['GET','POST'])
+def group_add():
+    user=g.user['user_id']
+    return render_template('/group/group_add.html',user=user)
+
+@app.route('/group/adding',methods=['GET','POST'])
+def group_adding():
+    error=None
+    if request.method == 'POST':
+        if not request.form['group_name']:
+            error='You have to enter a name'
+        elif not request.form['group_infor']:
+            error='You have to enter a group information'
+        else:
+            g.db.execute('insert into team (team_name, team_infor, team_admins, team_users) values (?, ?, ?, ?)',
+                         [request.form['group_name'],request.form['group_infor'],request.form['group_admin'],""])
+            g.db.commit()
+            return redirect(url_for('group'))
+    return render_template('/group/group_add.html',error=error)
+
+@app.route('/group/more/<num>',methods=['GET'])
+def group_view_more(num):
+    group = query_db('select * from team where team_num is ?',[num])
+    return render_template('/group/group_view_more.html',group=group,who_id=g.user['user_id'])
+
+@app.route('/group/delete/<num>',methods=['GET'])
+def group_delete(num):
+    g.db.execute('delete from team where team_num = ?',[num])
+    g.db.commit()
+    return redirect(url_for('group'))
 
 #######################################################################################################################################################
 #######################################################################################################################################################
@@ -412,9 +446,15 @@ def admin_add_problem_exe():
             error="You have to enter a text_input_info"
         elif not request.form['problem_text_output_info']:
             error="You have to enter a text_output_info"
+        elif not request.form['problem_input_ex']:
+            error="You have to enter a text_input_ex"
+        elif not request.form['problem_output_ex']:
+            error="You have to enter a text_output_ex"
         else:
-            g.db.execute('insert into problem(problem_name,problem_correct,problem_text_info,problem_text_input_info,problem_text_output_info) values(?, ?, ?, ?, ?)',
-                         [request.form['problem_name'], 0, request.form['problem_text_info'],request.form['problem_text_input_info'],request.form['problem_text_output_info']])
+            g.db.execute('''insert into problem(problem_name,problem_correct,problem_text_info,problem_text_input_info,problem_text_output_info,
+            problem_input_ex,problem_output_ex) values(?, ?, ?, ?, ?, ?, ?)''',
+            [request.form['problem_name'], 0, request.form['problem_text_info'],request.form['problem_text_input_info'],request.form['problem_text_output_info'],
+             request.form['problem_input_ex'],request.form['problem_output_ex']])
             g.db.commit()
             return redirect(url_for('admin_view_problem'))
     return render_template('/admin/admin_add_problem.html', error=error)
@@ -454,8 +494,9 @@ def admin_problem_changing():
     if g.user['user_id']!='admin':
         return redirect(url_for('home'))
     g.db.execute('''update problem set problem_name = ? , problem_text_info = ? , problem_text_input_info = ? , 
-    problem_text_output_info = ? where problem_num = ? '''
-                 ,[request.form['problem_title'], request.form['problem_body'], request.form['problem_input'], request.form['problem_output'] ,request.form['num']])
+    problem_text_output_info = ? , problem_input_ex = ? , problem_output_ex = ? where problem_num = ? '''
+    ,[request.form['problem_title'], request.form['problem_body'], request.form['problem_input'], request.form['problem_output'] ,
+      request.form['problem_input_ex'], request.form['problem_output_ex'], request.form['num']])
     g.db.commit()
     return redirect(url_for('admin_view_problem_info',problem_num=request.form['num']))
 

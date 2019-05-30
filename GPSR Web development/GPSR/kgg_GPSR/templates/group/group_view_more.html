@@ -1,0 +1,27 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+<html>
+    <head>
+        <title>GPSR | algorithm study</title>
+    </head>
+    <body>
+        <h1><strong><a href="{{ url_for('home') }}">to main</a></strong></h1>
+        {% if group %}
+        <h1>group #{{group[0].team_num}}</h1>
+        <hr>
+        <h2>Title : {{group[0].team_name}}</h2>
+        <h3>admins : {{group[0].team_admins}}
+            {% if group[0].team_admins == who_id %}
+            <a href="{{url_for('group_delete',num=group[0].team_num)}}">delete</a>
+            {% endif %}
+        </h3>
+        <h3>users : {{group[0].team_users}}</h3>
+        <hr>
+        <h2>information</h2>
+        <pre>{{group[0].team_infor}}</pre>
+        {% else %}
+        <h2>There is no group</h2>
+        {% endif %}
+    </body>
+</html>

@@ -8,17 +8,23 @@
         {% if error %}<div><strong>Error:</strong> {{ error }}</div>{% endif %}
         <div class=problembox>
         <form action="/geonguprincesssecretroom/add_problem_exe" method=post>
-                <h2>Problem_name </h2> 
-                <input type=text name=problem_name size=60>
+                <h2>Problem Title </h2> 
+                <textarea name=problem_name cols="70" rows="5"></textarea>
                 <br>
-                <h2>Problem_text_info</h2>
-                <textarea name=problem_text_info cols="120" rows="15"></textarea>
+                <h2>Problem Text</h2>
+                <textarea name=problem_text_info cols="100" rows="30"></textarea>
                 <br/>
-                <h2>Problem_text_input_info</h2>
-                <textarea name=problem_text_input_info cols="120" rows="15"></textarea>
+                <h2>Problem Input Info</h2>
+                <textarea name=problem_text_input_info cols="100" rows="30"></textarea>
                 <br/>
-                <h2>Problem_text_output_info</h2>
-                <textarea name=problem_text_output_info cols="120" rows="15"></textarea>
+                <h2>Problem Output Info</h2>
+                <textarea name=problem_text_output_info cols="100" rows="30"></textarea>
+                <br/>
+                <h2>Problem Input Example</h2>
+                <textarea name=problem_input_ex cols="100" rows="30"></textarea>
+                <br/>
+                <h2>Problem Output Example</h2>
+                <textarea name=problem_output_ex cols="100" rows="30"></textarea>
                 <br/>
                 <button type="submit">Submit</button>
             </form>

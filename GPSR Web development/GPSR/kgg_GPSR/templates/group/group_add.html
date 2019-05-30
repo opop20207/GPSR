@@ -1,0 +1,27 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+<html>
+    <head>
+        <title>GPSR | algorithm study</title>
+    </head>
+    <body>
+        <h1><strong><a href="{{ url_for('home') }}">to main</a></strong></h1>
+        <h1>New Group</h1>
+        <hr>
+        {% if error %}<div><strong>Error:</strong> {{ error }}</div>{% endif %}
+        <div class=groupbox>
+            <form action='/group/adding' method=post>
+                <h2>Group admin</h2>
+                <input type=text name=group_admin value={{user}} readonly>
+                <h2>Group name</h2> 
+                <input type=text name=group_name size=60>
+                <br>
+                <h2>Group information</h2>
+                <textarea name=group_infor cols="100" rows="20"></textarea>
+                <br/>
+                <button type="submit">Make</button>
+            </form>
+        </div>
+    </body>
+</html>

@@ -7,13 +7,20 @@
         <title>GPSR | algorithm study</title>
     </head>
     <body>
+        <h2><strong><a href="{{ url_for('admin') }}">to admin</a></strong></h2>
         <h2>Problem #{{problem["problem_num"]}}</h2>
         <hr>
+        <h2>Title</h2>
+        <pre>{{problem.problem_name}}</pre>
         <h2>Problem</h2>
         <pre>{{problem.problem_text_info}}</pre>
         <h2>Input</h2>
         <pre>{{problem.problem_text_input_info}}</pre>
         <h2>Output</h2>
         <pre>{{problem.problem_text_output_info}}</pre>
+        <h2>Input Example</h2>
+        <pre>{{problem.problem_input_ex}}</pre>
+        <h2>Output Example</h2>
+        <pre>{{problem.problem_output_ex}}</pre>
     </body>
 </html>

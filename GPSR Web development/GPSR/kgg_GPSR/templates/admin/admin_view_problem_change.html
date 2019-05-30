@@ -13,21 +13,34 @@
         <div class=talkbox>
             <form action="/geonguprincesssecretroom/problem_changing" method=post>
                 <input type=number name=num value={{problem[0].problem_num}} readonly>
-                <h2>Title</h2> 
-                <input type=text name=problem_title size=60
-                value={{problem[0].problem_name}}>
+                <h2>Title</h2>
+                <textarea name=problem_title cols="70" rows="5">
+{{problem[0].problem_name}}
+                </textarea>
                 <br>
                 <h2>Text</h2>
-                <textarea name=problem_body cols="140" rows="40">
+                <textarea name=problem_body cols="100" rows="30">
 {{problem[0].problem_text_info}}
                 </textarea>
                 <br/>
-                <textarea name=problem_input cols="140" rows="40">
+                <h2>Input Information</h2>
+                <textarea name=problem_input cols="100" rows="30">
 {{problem[0].problem_text_input_info}}
                 </textarea>
                 <br/>
-                <textarea name=problem_output cols="140" rows="40">
+                <h2>Output Information</h2>
+                <textarea name=problem_output cols="100" rows="30">
 {{problem[0].problem_text_output_info}}
+                </textarea>
+                <br/>
+                <h2>Input Example</h2>
+                <textarea name=problem_input_ex cols="100" rows="30">
+{{problem[0].problem_input_ex}}
+                </textarea>
+                <br/>
+                <h2>Output Example</h2>
+                <textarea name=problem_output_ex cols="100" rows="30">
+{{problem[0].problem_output_ex}}
                 </textarea>
                 <br/>
                 <button type="submit">Submit</button>

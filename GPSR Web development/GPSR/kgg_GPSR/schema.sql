@@ -12,12 +12,17 @@ create table if not exists problem (
   problem_correct integer,
   problem_text_info string not null,
   problem_text_input_info string not null,
-  problem_text_output_info string not null
+  problem_text_output_info string not null,
+  problem_input_ex string not null,
+  problem_output_ex string not null
 );
 
-create table if not exists follow (
-  follow_who_id integer,
-  follow_whom_id integer
+create table if not exists team (
+  team_num integer primary key autoincrement,
+  team_name string not null,
+  team_infor string not null,
+  team_admins string not null,
+  team_users string not null
 );
 
 create table if not exists board (

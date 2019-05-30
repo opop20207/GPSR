@@ -1,0 +1,19 @@
+<!doctype html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+<html>
+    <head>
+        <title>GPSR | algorithm study</title>
+    </head>
+    <body>
+        <h1><strong><a href="{{ url_for('home') }}">to main</a></strong></h1>
+        <h1>Group</h1>
+        <h2><strong><a href="{{ url_for('group_add') }}">New Group</a></strong></h2>
+        <hr>
+        {% for i in group %}
+            <h4>Group #{{i.team_num}} | {{ i.team_name }} 
+            <a href="{{ url_for('group_view_more', num=i.team_num) }}">
+                    more</a></h4>
+        {% endfor %}
+    </body>
+</html>
