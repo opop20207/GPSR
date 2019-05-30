@@ -8,6 +8,11 @@ from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 import os
+from subprocess import call
+import subprocess
+import resources
+
+
 #settings
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -177,6 +182,10 @@ def problem_compile():
         error="Wrong!"
     elif res==2:
         error="Success!"
+    elif res==3:
+        error="Time error"
+    elif res==4:
+        error="Runtime error"
     
     a['answer_result']=res
     g.db.execute('insert into answer(answer_problem_num, answer_language,answer_who,answer_text,answer_result) values(?,?,?,?,?)',
@@ -191,21 +200,46 @@ def problem_compile_C(a):
     
     command_inputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.in'    
     command_outputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.out'
+    problem_temp=query_db('select * from problem where problem_num = ?', [a['answer_problem_num']], True)
+    timelimit=str(problem_temp['problem_timelimit'])
+    datalimit=str(problem_temp['problem_datalimit'])
+
+    file=open('test_shell.sh', 'w')
+    file.write('timeout '+timelimit+' ./a.out < '+command_inputfile+' &> user_output.txt\n')
+    file.write('echo $? &> user_error.txt')
+    file.close()
     
-    f = os.system('gcc test_file.c')
+    f = os.system('gcc test_file.c -o a.out')
     if f == 0:
-        temp1 = os.popen('a.exe < '+command_inputfile, "r").read()
-        temp2 = open(command_outputfile, "r").read()
-        print(temp1)
-        print(temp2)
-        os.remove('a.exe')
-        if temp1 == temp2:
-            res=2
-        else:
-            res=1
+        os.system('test_shell.sh')
+        
+        problem_output = open(command_outputfile, "r").read()
+        user_output = open('user_output.txt', "r").read()
+        user_error = open('user_error.txt', "r").read()
+        
+        print(user_output)
+        print(problem_output)
+        print(user_error)
+        
+        os.remove('a.out')
+        os.remove('user_output.txt')
+        os.remove('user_error.txt')
+        
+        user_error=eval(user_error)
+        
+        if user_error == 124:
+            res=3
+        elif user_error != 0:
+            res=4
+        else: 
+            if problem_output == user_output:
+                res=2
+            else:
+                res=1
     else:
         res=0
     os.remove('test_file.c')
+    #os.remove('test_shell.sh')
     
     return res
 
@@ -282,6 +316,7 @@ def problem_compile_Python(a):
     os.remove('test_file.py')
     
     return res
+    
 
 #######################################################################################################################################################
 #######################################################################################################################################################
@@ -412,9 +447,15 @@ def admin_add_problem_exe():
             error="You have to enter a text_input_info"
         elif not request.form['problem_text_output_info']:
             error="You have to enter a text_output_info"
+        elif not request.form['problem_timelimit']:
+            error="You have to enter a timelimit"
+        elif not request.form['problem_datalimit']:
+            error="You have to enter a datalimit"
         else:
-            g.db.execute('insert into problem(problem_name,problem_correct,problem_text_info,problem_text_input_info,problem_text_output_info) values(?, ?, ?, ?, ?)',
-                         [request.form['problem_name'], 0, request.form['problem_text_info'],request.form['problem_text_input_info'],request.form['problem_text_output_info']])
+            g.db.execute('''insert into problem(problem_name,problem_correct,problem_text_info,
+            problem_text_input_info,problem_text_output_info, problem_timelimit, problem_datalimit) values(?, ?, ?, ?, ?, ?, ?)''',
+                         [request.form['problem_name'], 0, request.form['problem_text_info'],request.form['problem_text_input_info'],request.form['problem_text_output_info']
+                          ,request.form['problem_timelimit'],request.form['problem_datalimit']])
             g.db.commit()
             return redirect(url_for('admin_view_problem'))
     return render_template('/admin/admin_add_problem.html', error=error)
@@ -454,8 +495,9 @@ def admin_problem_changing():
     if g.user['user_id']!='admin':
         return redirect(url_for('home'))
     g.db.execute('''update problem set problem_name = ? , problem_text_info = ? , problem_text_input_info = ? , 
-    problem_text_output_info = ? where problem_num = ? '''
-                 ,[request.form['problem_title'], request.form['problem_body'], request.form['problem_input'], request.form['problem_output'] ,request.form['num']])
+    problem_text_output_info = ?, problem_timelimit = ?, problem_datalimit = ? where problem_num = ? '''
+                 ,[request.form['problem_title'], request.form['problem_body'], request.form['problem_input'],
+                   request.form['problem_output'] ,request.form['num'], request.form['problem_timelimit'], request.form['problem_datalimit']])
     g.db.commit()
     return redirect(url_for('admin_view_problem_info',problem_num=request.form['num']))
 

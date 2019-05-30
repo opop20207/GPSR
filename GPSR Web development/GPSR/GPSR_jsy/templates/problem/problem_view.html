@@ -24,6 +24,7 @@
             <div class=problem_content>
 	            {% if problem %}
 	            <h1>Problem #{{problem[0].problem_num}} <small>{{problem[0].problem_name}}</small> </h1>
+	            <h4>시간 제한 : {{problem[0].problem_timelimit}}(s) | 메모리 제한 : {{problem[0].problem_datalimit}}(KB)</h4>
 	            <hr>
 	            <h2>문제</h2>
 	            <pre>{{problem[0].problem_text_info}}</pre>

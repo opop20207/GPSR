@@ -12,7 +12,9 @@ create table if not exists problem (
   problem_correct integer,
   problem_text_info string not null,
   problem_text_input_info string not null,
-  problem_text_output_info string not null
+  problem_text_output_info string not null,
+  problem_timelimit integer,
+  problem_datalimit integer
 );
 
 create table if not exists follow (

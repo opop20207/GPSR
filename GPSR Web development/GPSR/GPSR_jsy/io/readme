@@ -2,3 +2,5 @@ result
 0 : compile error
 1 : wrong
 2 : success
+3 : time out
+4 : runtime error
