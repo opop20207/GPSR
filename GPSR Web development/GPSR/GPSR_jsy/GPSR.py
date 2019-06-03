@@ -177,15 +177,15 @@ def problem_compile():
         res = problem_compile_Python(a)
         
     if res==0:
-        error="compile error!"
+        error="Compile Error"
     elif res==1:
-        error="Wrong!"
+        error="Wrong"
     elif res==2:
-        error="Success!"
+        error="Success"
     elif res==3:
-        error="Time error"
+        error="Time Limit Error"
     elif res==4:
-        error="Runtime error"
+        error="Runtime Error"
     
     a['answer_result']=res
     g.db.execute('insert into answer(answer_problem_num, answer_language,answer_who,answer_text,answer_result) values(?,?,?,?,?)',
@@ -202,14 +202,14 @@ def problem_compile_C(a):
     command_outputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.out'
     problem_temp=query_db('select * from problem where problem_num = ?', [a['answer_problem_num']], True)
     timelimit=str(problem_temp['problem_timelimit'])
-    datalimit=str(problem_temp['problem_datalimit'])
-
+    datalimit=str(problem_temp['problem_datalimit']*1024)#Bytes
+    datalimit='1'
     file=open('test_shell.sh', 'w')
     file.write('timeout '+timelimit+' ./a.out < '+command_inputfile+' &> user_output.txt\n')
     file.write('echo $? &> user_error.txt')
     file.close()
     
-    f = os.system('gcc test_file.c -o a.out')
+    f = os.system('gcc -Wl,--heap='+datalimit+',--stack='+datalimit+' test_file.c -o a.out')
     if f == 0:
         os.system('test_shell.sh')
         
@@ -250,46 +250,96 @@ def problem_compile_Cpp(a):
     
     command_inputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.in'    
     command_outputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.out'
+    problem_temp=query_db('select * from problem where problem_num = ?', [a['answer_problem_num']], True)
+    timelimit=str(problem_temp['problem_timelimit'])
+    datalimit=str(problem_temp['problem_datalimit'])
     
-    f = os.system('g++ test_file.cpp')
+    file=open('test_shell.sh', 'w')
+    file.write('timeout '+timelimit+' ./a.out < '+command_inputfile+' &> user_output.txt\n')
+    file.write('echo $? &> user_error.txt')
+    file.close()
+    
+    f = os.system('g++ test_file.cpp -o a.out')
     if f == 0:
-        temp1 = os.popen('a.exe < '+command_inputfile, "r").read()
-        temp2 = open(command_outputfile, "r").read()
-        print(temp1)
-        print(temp2)
-        os.remove('a.exe')
-        if temp1 == temp2:
-            res=2
-        else:
-            res=1
+        os.system('test_shell.sh')
+        
+        problem_output = open(command_outputfile, "r").read()
+        user_output = open('user_output.txt', "r").read()
+        user_error = open('user_error.txt', "r").read()
+        
+        print(user_output)
+        print(problem_output)
+        print(user_error)
+        
+        os.remove('a.out')
+        os.remove('user_output.txt')
+        os.remove('user_error.txt')
+        
+        user_error=eval(user_error)
+        
+        if user_error == 124:
+            res=3
+        elif user_error != 0:
+            res=4
+        else: 
+            if problem_output == user_output:
+                res=2
+            else:
+                res=1
     else:
         res=0
     os.remove('test_file.cpp')
+    os.remove('test_shell.sh')
     
     return res
 
 def problem_compile_Java(a):
-    file=open('test_file.java', 'w')
+    file=open('Main.java', 'w')
     file.write(a['answer_text'])
     file.close()
     
     command_inputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.in'    
     command_outputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.out'
+    problem_temp=query_db('select * from problem where problem_num = ?', [a['answer_problem_num']], True)
+    timelimit=str(problem_temp['problem_timelimit']+5)
+    datalimit=str(problem_temp['problem_datalimit'])
     
-    f = os.system('javac test_file.java')
+    file=open('test_shell.sh', 'w')
+    file.write('timeout '+timelimit+' java Main < '+command_inputfile+' &> user_output.txt\n')
+    file.write('echo $? &> user_error.txt')
+    file.close()
+    
+    f = os.system('javac Main.java')
     if f == 0:
-        temp1 = os.popen('java Main < '+command_inputfile, "r").read()
-        temp2 = open(command_outputfile, "r").read()
-        print(temp1)
-        print(temp2)
-        if temp1 == temp2:
-            res=2
-        else:
-            res=1
+        os.system('test_shell.sh')
+        
+        problem_output = open(command_outputfile, "r").read()
+        user_output = open('user_output.txt', "r").read()
+        user_error = open('user_error.txt', "r").read()
+        
+        print(user_output)
+        print(problem_output)
+        print(user_error)
+        
         os.remove('Main.class')
+        os.remove('user_output.txt')
+        os.remove('user_error.txt')
+        
+        user_error=eval(user_error)
+        
+        if user_error == 124:
+            res=3
+        elif user_error != 0:
+            res=4
+        else: 
+            if problem_output == user_output:
+                res=2
+            else:
+                res=1
     else:
         res=0
-    os.remove('test_file.java')
+    os.remove('Main.java')
+    os.remove('test_shell.sh')
     
     return res
 
@@ -300,23 +350,47 @@ def problem_compile_Python(a):
     
     command_inputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.in'    
     command_outputfile = 'io/'+str(a['answer_problem_num'])+'/'+str(a['answer_problem_num'])+'.out'
+    problem_temp=query_db('select * from problem where problem_num = ?', [a['answer_problem_num']], True)
+    timelimit=str(problem_temp['problem_timelimit']+10)
+    datalimit=str(problem_temp['problem_datalimit'])
+    
+    file=open('test_shell.sh', 'w')
+    file.write('timeout '+timelimit+' python test_file.py < '+command_inputfile+' &> user_output.txt\n')
+    file.write('echo $? &> user_error.txt')
+    file.close()
     
     f = os.system('python -m py_compile test_file.py')
     if f == 0:
-        temp1 = os.popen('python test_file.py < '+command_inputfile, "r").read()
-        temp2 = open(command_outputfile, "r").read()
-        print(temp1)
-        print(temp2)
-        if temp1 == temp2:
-            res=2
-        else:
-            res=1
+        os.system('test_shell.sh')
+        
+        problem_output = open(command_outputfile, "r").read()
+        user_output = open('user_output.txt', "r").read()
+        user_error = open('user_error.txt', "r").read()
+        
+        print(user_output)
+        print(problem_output)
+        print(user_error)
+        
+        os.remove('user_output.txt')
+        os.remove('user_error.txt')
+        
+        user_error=eval(user_error)
+        
+        if user_error == 124:
+            res=3
+        elif user_error != 0:
+            res=4
+        else: 
+            if problem_output == user_output:
+                res=2
+            else:
+                res=1
     else:
         res=0
     os.remove('test_file.py')
+    os.remove('test_shell.sh')
     
     return res
-    
 
 #######################################################################################################################################################
 #######################################################################################################################################################

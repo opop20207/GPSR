@@ -4,3 +4,4 @@ result
 2 : success
 3 : time out
 4 : runtime error
+5 : stack oversize
